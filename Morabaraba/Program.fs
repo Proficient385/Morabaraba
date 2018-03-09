@@ -1,4 +1,5 @@
 ﻿open System
+open System.IO
 
 type Cell =
 | Y
@@ -169,10 +170,57 @@ let rec runGame currentPlayer game =
         | _ -> ()
     playAgain ()
 *)
+//let (a1,a4,a7): Cell = (Blank, Blank, Blank) 
+
+
+
+let printBoard2 a1 a4 a7 b2 b4 b6 c3 c4 c5 d1 d2 d3 d5 d6 d7 e3 e4 e5 f2 f4 f6 g1 g4 g7= 
+                  //System.Console.Clear ()
+                  let printBdA = printfn " %A ______________%A______________%A" a1 a4 a7
+                                 printfn " |  \               |              / |"
+                                 printfn " |   \              |             /  | "
+                                 printfn " |    \             |            /   |"
+                  let printBdB = printfn " |    %A__________%A_________%A   |" b2 b4 b6
+                                 printfn " |     |\           |          /|    |"
+                                 printfn " |     | \          |         / |    |"
+                                 printfn " |     |  \         |        /  |    |"
+                  let printBdC = printfn " |     |   %A_____%A____%A   |    |" c3 c4 c5
+                                 printfn " |     |    |              |    |    |"
+                                 printfn " |     |    |              |    |    |"
+                                 printfn " |     |    |              |    |    |"
+                  let printBdD =
+                                 printfn " %A__%A__%A            %A__%A__%A" d1 d2 d3 d5 d6 d7
+                                 printfn " |     |    |              |    |    |"
+                                 
+                  let printBdE = printfn " |     |    |              |    |    |"
+                                 printfn " |     |    |              |    |    |"
+                                 printfn " |     |   %A_____%A____%A   |    |" e3 e4 e5
+                         
+                  let printBdF = printfn " |     |   /        |        \  |    |"
+                                 printfn " |     |  /         |         \ |    |"
+                                 printfn " |     | /          |          \|    |"
+                                 printfn " |    %A__________%A_________%A   |" f2 f4 f6
+
+                  let printBdG  = printfn " |    /             |            \   |"
+                                  printfn " |   /              |             \  | "
+                                  printfn " |  /               |              \ |"
+                                  printfn "  %A _____________%A_____________%A" g1 g4 g7    
+                  printBdA
+                  printBdB
+                  printBdC
+                  printBdD
+                  printBdE
+                  printBdF
+                  printBdG
+
 [<EntryPoint>]
 let main argv =
     //runGame Y blankBoard
     printBoard blankBoard
+    printf "\n\n\n"
+    printBoard2 'A' 'B' 'C' 'D' 'F' 'G' 'H' 'I' 'G' 'A' 'B' 'C' 'D' 'F' 'G' 'H' 'I' 'G' 'A' 'B' 'C' 'D' 'F' 'G'
+    //printBoard2 ' ' 'B' 'C' 'D' 'F' 'G' 'H' 'I' 'G' 'A' 'B' 'C' 'D' 'F' 'G' 'H' 'I' 'G' 'A' 'B' 'C' 'D' 'F' 'G'
+
     Console.Read()
 
     //runGame X blankBoard
