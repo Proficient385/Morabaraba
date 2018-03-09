@@ -171,40 +171,58 @@ let rec runGame currentPlayer game =
     playAgain ()
 *)
 //let (a1,a4,a7): Cell = (Blank, Blank, Blank) 
+//a1 a4 a7 b2 b4 b6 c3 c4 c5 d1 d2 d3 d5 d6 d7 e3 e4 e5 f2 f4 f6 g1 g4 g7
 
-
-
-let printBoard2 a1 a4 a7 b2 b4 b6 c3 c4 c5 d1 d2 d3 d5 d6 d7 e3 e4 e5 f2 f4 f6 g1 g4 g7= 
+//let board = 
+          // let 
+           
+let printBoard2 (Board (r1, r2, r3,r4,r5,r6,r7,r8))= 
+                   
                   //System.Console.Clear ()
-                  let printBdA = printfn " %A ______________%A______________%A" a1 a4 a7
+                  let tc value = 
+                            match value with
+                            |Y -> 'Y'
+                            |M -> 'M'
+                            |_ -> ' '
+                  let a1, a4, a7 = r1
+                  let b2, b4, b6 = r2
+                  let c3, c4, c5 = r3
+                  let d1, d2, d3 = r4
+                  let d5, d6, d7 = r5
+                  let e3, e4, e5 = r6
+                  let f2, f4, f6 = r6
+                  let g1, g4, g7 = r8
+
+
+                  let printBdA = printfn " %A ______________%A______________%A" (tc a1) (tc a4) (tc a7)
                                  printfn " |  \               |              / |"
                                  printfn " |   \              |             /  | "
                                  printfn " |    \             |            /   |"
-                  let printBdB = printfn " |    %A__________%A_________%A   |" b2 b4 b6
+                  let printBdB = printfn " |    %A__________%A_________%A   |" (tc b2) (tc b4) (tc b6)
                                  printfn " |     |\           |          /|    |"
                                  printfn " |     | \          |         / |    |"
                                  printfn " |     |  \         |        /  |    |"
-                  let printBdC = printfn " |     |   %A_____%A____%A   |    |" c3 c4 c5
+                  let printBdC = printfn " |     |   %A_____%A____%A   |    |" (tc c3) (tc c4) (tc c5)
                                  printfn " |     |    |              |    |    |"
                                  printfn " |     |    |              |    |    |"
                                  printfn " |     |    |              |    |    |"
                   let printBdD =
-                                 printfn " %A__%A__%A            %A__%A__%A" d1 d2 d3 d5 d6 d7
+                                 printfn " %A__%A__%A            %A__%A__%A" (tc d1) (tc d2) (tc d3) (tc d5) (tc d6) (tc d7)
                                  printfn " |     |    |              |    |    |"
                                  
                   let printBdE = printfn " |     |    |              |    |    |"
                                  printfn " |     |    |              |    |    |"
-                                 printfn " |     |   %A_____%A____%A   |    |" e3 e4 e5
+                                 printfn " |     |   %A_____%A____%A   |    |" (tc e3) (tc e4) (tc e5)
                          
                   let printBdF = printfn " |     |   /        |        \  |    |"
                                  printfn " |     |  /         |         \ |    |"
                                  printfn " |     | /          |          \|    |"
-                                 printfn " |    %A__________%A_________%A   |" f2 f4 f6
+                                 printfn " |    %A__________%A_________%A   |" (tc f2) (tc f4) (tc f6)
 
                   let printBdG  = printfn " |    /             |            \   |"
                                   printfn " |   /              |             \  | "
                                   printfn " |  /               |              \ |"
-                                  printfn "  %A _____________%A_____________%A" g1 g4 g7    
+                                  printfn "  %A _____________%A_____________%A" (tc g1) (tc g4) (tc g7)    
                   printBdA
                   printBdB
                   printBdC
@@ -218,8 +236,8 @@ let main argv =
     //runGame Y blankBoard
     printBoard blankBoard
     printf "\n\n\n"
-    printBoard2 'A' 'B' 'C' 'D' 'F' 'G' 'H' 'I' 'G' 'A' 'B' 'C' 'D' 'F' 'G' 'H' 'I' 'G' 'A' 'B' 'C' 'D' 'F' 'G'
-    //printBoard2 ' ' 'B' 'C' 'D' 'F' 'G' 'H' 'I' 'G' 'A' 'B' 'C' 'D' 'F' 'G' 'H' 'I' 'G' 'A' 'B' 'C' 'D' 'F' 'G'
+    printBoard2  blankBoard
+    
 
     Console.Read()
 
