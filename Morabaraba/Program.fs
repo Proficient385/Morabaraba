@@ -36,52 +36,254 @@ let nulledComb game =
     (nullTuple xs)::listOfNulled
     *)
 
-let nullCheck game =
+let nullCheck game position =
     let (Board (r1,r2,r3,r4,r5,r6,r7,r8)) = game
-    match r1,r2,r3,r4,r5,r6,r7,r8 with
-    | (Y,Y,Y),_,_,_,_,_,_,_     // r1 Y null ~A
-    | _,(Y,Y,Y),_,_,_,_,_,_     // r2 Y null ~B
-    | _,_,(Y,Y,Y),_,_,_,_,_     // r3 Y null ~C
-    | _,_,_,(Y,Y,Y),_,_,_,_     // r4 Y null ~D1 ~Middle
-    | _,_,_,_,(Y,Y,Y),_,_,_     // r5 Y null ~D2 ~Middle
-    | _,_,_,_,_,(Y,Y,Y),_,_     // r6 Y null ~E
-    | _,_,_,_,_,_,(Y,Y,Y),_     // r7 Y null ~F
-    | _,_,_,_,_,_,_,(Y,Y,Y) ->  // r8 Y null ~G
-  (*  | (Y,_,_),(Y,_,_),(Y,_,_),_,_,_,_,_     // A1-B2-C3 Y null
-    | (_,Y,_),(_,Y,_),(_,Y,_),_,_,_,_,_     // A4-B4-C4 Y null ~Middle
-    | (_,_,Y),(_,_,Y),(_,_,Y),_,_,_,_,_    // A7-B6-C5 Y null
-    | (Y,_,_),_,_,(Y,_,_),_,_,_,(Y,_,_)     // A1-D1-G1 Y null ~leftmost vertical
-    | _,(Y,_,_),_,(_,Y,_),_,_,(Y,_,_),_     // B2-D2-F2 Y null
-    | _,_,(Y,_,_),(_,_,Y),_,(Y,_,_),_,_     // C3-D3-E3 Y null
-    | _,_,_,_,_,(Y,_,_),(Y,_,_),(Y,_,_)     // G1-F2-E3 Y null
-    | _,_,_,_,_,(_,Y,_),(_,Y,_),(_,Y,_)     // G4-F4-E4 Y null ~Middle
-    | _,_,_,_,_,(_,_,Y),(_,_,Y),(_,_,Y)     // G7-F6-E5 Y null
-    | (_,_,Y),_,_,_,(_,_,Y),_,_,(_,_,Y)     // A7-D7-G7 Y null ~rightmost vertical
-    | _,(_,_,Y),_,_,(_,Y,_),_,(_,_,Y),_     // B6-D6-F6 Y null
-    | _,_,(_,_,Y),_,(Y,_,_),(_,_,Y),_,_ ->  // G4-F4-E4 Y null  *)
-        printfn("Hey Y has nulled now ! ")
-    | _ -> printf("") (*
-    | (M,M,M),_,_,_,_,_,_,_     // r1 M null ~A                         // This entire part commented because it takes longer to search
-    | _,(M,M,M),_,_,_,_,_,_     // r2 M null ~B
-    | _,_,(M,M,M),_,_,_,_,_     // r3 M null ~C
-    | _,_,_,(M,M,M),_,_,_,_     // r4 M null ~D1 ~Middle
-    | _,_,_,_,(M,M,M),_,_,_     // r5 M null ~D2 ~Middle
-    | _,_,_,_,_,(M,M,M),_,_     // r6 M null ~E
-    | _,_,_,_,_,_,(M,M,M),_     // r7 M null ~F
-    | _,_,_,_,_,_,_,(M,M,M)     // r8 M null ~G
-    | (M,_,_),(M,_,_),(M,_,_),_,_,_,_,_     // A1-B2-C3 M null                           // But then this part commented because it throws an exception of OutOfMemory, will consult Mr Yusuf
-    | (_,M,_),(_,M,_),(_,M,_),_,_,_,_,_     // A4-B4-C4 M null ~Middle
-    | (_,_,M),(_,_,M),(_,_,M),_,_,_,_,_    // A7-B6-C5 M null
-    | (M,_,_),_,_,(M,_,_),_,_,_,(M,_,_)     // A1-D1-G1 M null ~leftmost vertical
-    | _,(M,_,_),_,(_,M,_),_,_,(M,_,_),_     // B2-D2-F2 M null
-    | _,_,(M,_,_),(_,_,M),_,(M,_,_),_,_     // C3-D3-E3 M null
-    | _,_,_,_,_,(M,_,_),(M,_,_),(M,_,_)     // G1-F2-E3 M null
-    | _,_,_,_,_,(_,M,_),(_,M,_),(_,M,_)     // G4-F4-E4 M null ~Middle
-    | _,_,_,_,_,(_,_,M),(_,_,M),(_,_,M)     // G7-F6-E5 M null
-    | (_,_,M),_,_,_,(_,_,M),_,_,(_,_,M)     // A7-D7-G7 M null ~rightmost vertical
-    | _,(_,_,M),_,_,(_,M,_),_,(_,_,M),_     // B6-D6-F6 M null
-    | _,_,(_,_,M),_,(M,_,_),(_,_,M),_,_ ->  // G4-F4-E4 M null 
-        printfn("Hey M has nulled now ! ")  *)
+    match position with
+    |"A1" -> match (r1,r2,r3,r4,r5,r6,r7,r8) with
+             | (Y,Y,Y),_,_,_,_,_,_,_                // r1 Y null ~A
+             | (Y,_,_),(Y,_,_),(Y,_,_),_,_,_,_,_    // A1-B2-C3 Y null
+             | (Y,_,_),_,_,(Y,_,_),_,_,_,(Y,_,_) -> printfn("\nHey Y has nulled now ! ")    // A1-D1-G1 Y null ~leftmost vertical
+
+             | (M,M,M),_,_,_,_,_,_,_                // r1 Y null ~A
+             | (M,_,_),(M,_,_),(M,_,_),_,_,_,_,_    // A1-B2-C3 Y null
+             | (M,_,_),_,_,(M,_,_),_,_,_,(M,_,_) -> printfn("\nHey M has nulled now ! ")    // A1-D1-G1 Y null ~leftmost vertical
+
+             |_ ->  printf("")
+   
+    |"A4" -> match (r1,r2,r3,r4,r5,r6,r7,r8) with
+             | (Y,Y,Y),_,_,_,_,_,_,_  
+             | (_,Y,_),(_,Y,_),(_,Y,_),_,_,_,_,_ ->  printfn("\nHey Y has nulled now ! ")    // A4-B4-C4 Y null ~Middle
+
+             | (M,M,M),_,_,_,_,_,_,_  
+             | (_,M,_),(_,M,_),(_,M,_),_,_,_,_,_ ->  printfn("\nHey M has nulled now ! ")    // A4-B4-C4 Y null ~Middle
+
+             |_ ->  printf("")
+
+    |"A7" -> match (r1,r2,r3,r4,r5,r6,r7,r8) with        // ~A
+             | (Y,Y,Y),_,_,_,_,_,_,_ 
+             | (_,_,Y),(_,_,Y),(_,_,Y),_,_,_,_,_      // A7-B6-C5
+             | (_,_,Y),_,_,_,(_,_,Y),_,_,(_,_,Y) -> printfn("\nHey Y has nulled now ! ")    // A7-D7-G7 Y null ~rightmost vertical
+
+             | (M,M,M),_,_,_,_,_,_,_ 
+             | (_,_,M),(_,_,M),(_,_,M),_,_,_,_,_      // A7-B6-C5
+             | (_,_,M),_,_,_,(_,_,M),_,_,(_,_,M) -> printfn("\nHey M has nulled now ! ")    // A7-D7-G7 Y null ~rightmost vertical
+
+             |_ ->  printf("")
+
+    |"B2" -> match (r1,r2,r3,r4,r5,r6,r7,r8) with
+             | _,(Y,Y,Y),_,_,_,_,_,_   // r2 Y null ~B
+             | (Y,_,_),(Y,_,_),(Y,_,_),_,_,_,_,_    // A1-B2-C3 Y null
+             | _,(Y,_,_),_,(_,Y,_),_,_,(Y,_,_),_ -> printfn("\nHey Y has nulled now ! ")    // B2-D2-F2 Y null
+
+             | _,(M,M,M),_,_,_,_,_,_   // r2 Y null ~B
+             | (M,_,_),(M,_,_),(M,_,_),_,_,_,_,_    // A1-B2-C3 Y null
+             | _,(M,_,_),_,(_,M,_),_,_,(M,_,_),_ -> printfn("\nHey M has nulled now ! ")    // B2-D2-F2 Y null
+
+             |_ ->  printf("")
+
+    |"B4" -> match (r1,r2,r3,r4,r5,r6,r7,r8) with
+             | _,(Y,Y,Y),_,_,_,_,_,_   // r2 Y null ~B
+             | (_,Y,_),(_,Y,_),(_,Y,_),_,_,_,_,_ -> printfn("\nHey Y has nulled now ! ") // A4-B4-C4 Y null ~Middle
+
+             | _,(M,M,M),_,_,_,_,_,_   // r2 Y null ~B
+             | (_,M,_),(_,M,_),(_,M,_),_,_,_,_,_ -> printfn("\nHey M has nulled now ! ") // A4-B4-C4 Y null ~Middle
+
+             |_ ->  printf("")
+
+    |"B6" -> match (r1,r2,r3,r4,r5,r6,r7,r8) with
+             | _,(Y,Y,Y),_,_,_,_,_,_   // r2 Y null ~B
+             | (_,_,Y),(_,_,Y),(_,_,Y),_,_,_,_,_      // A7-B6-C5
+             | _,(_,_,Y),_,_,(_,Y,_),_,(_,_,Y),_ -> printfn("\nHey Y has nulled now ! ")    // B6-D6-F6 Y null
+
+             | _,(M,M,M),_,_,_,_,_,_   // r2 Y null ~B
+             | (_,_,M),(_,_,M),(_,_,M),_,_,_,_,_      // A7-B6-C5
+             | _,(_,_,M),_,_,(_,M,_),_,(_,_,M),_ -> printfn("\nHey M has nulled now ! ")    // B6-D6-F6 Y null
+
+             |_ ->  printf("")
+
+    |"C3" -> match (r1,r2,r3,r4,r5,r6,r7,r8) with
+             | _,_,(Y,Y,Y),_,_,_,_,_     // r3 Y null ~C
+             | (Y,_,_),(Y,_,_),(Y,_,_),_,_,_,_,_    // A1-B2-C3 Y null
+             | _,_,(Y,_,_),(_,_,Y),_,(Y,_,_),_,_ -> printfn("\nHey Y has nulled now ! ")    // C3-D3-E3 Y null
+
+             | _,_,(M,M,M),_,_,_,_,_     // r3 Y null ~C
+             | (M,_,_),(M,_,_),(M,_,_),_,_,_,_,_    // A1-B2-C3 Y null
+             | _,_,(M,_,_),(_,_,M),_,(M,_,_),_,_ -> printfn("\nHey M has nulled now ! ")    // C3-D3-E3 Y null
+
+             |_ ->  printf("")
+    
+    |"C4" -> match (r1,r2,r3,r4,r5,r6,r7,r8) with
+             | _,_,(Y,Y,Y),_,_,_,_,_     // r3 Y null ~C
+             | (_,Y,_),(_,Y,_),(_,Y,_),_,_,_,_,_ -> printfn("\nHey Y has nulled now ! ") // A4-B4-C4 Y null ~Middle
+
+             | _,_,(M,M,M),_,_,_,_,_     // r3 Y null ~C
+             | (_,M,_),(_,M,_),(_,M,_),_,_,_,_,_ -> printfn("\nHey M has nulled now ! ") // A4-B4-C4 Y null ~Middle
+
+             |_ ->  printf("")
+
+    |"C5" -> match (r1,r2,r3,r4,r5,r6,r7,r8) with
+             | _,_,(Y,Y,Y),_,_,_,_,_     // r3 Y null ~C
+             | (_,_,Y),(_,_,Y),(_,_,Y),_,_,_,_,_      // A7-B6-C5
+             | _,_,(_,_,Y),_,(Y,_,_),(_,_,Y),_,_  -> printfn("\nHey Y has nulled now ! ")    // C5-D5-E5
+
+             | _,_,(M,M,M),_,_,_,_,_     // r3 Y null ~C
+             | (_,_,M),(_,_,M),(_,_,M),_,_,_,_,_      // A7-B6-C5
+             | _,_,(_,_,M),_,(M,_,_),(_,_,M),_,_  -> printfn("\nHey M has nulled now ! ")    // C5-D5-E5
+
+             |_ ->  printf("")
+   
+    |"D1" -> match (r1,r2,r3,r4,r5,r6,r7,r8) with
+             | _,_,_,(Y,Y,Y),_,_,_,_    // r4 Y null ~D1 ~Middle
+             | (Y,_,_),_,_,(Y,_,_),_,_,_,(Y,_,_) -> printfn("\nHey Y has nulled now ! ")    // A1-D1-G1 Y null ~leftmost vertical
+
+             | _,_,_,(M,M,M),_,_,_,_    // r4 Y null ~D1 ~Middle
+             | (M,_,_),_,_,(M,_,_),_,_,_,(M,_,_) -> printfn("\nHey M has nulled now ! ")    // A1-D1-G1 Y null ~leftmost vertical
+
+             |_ ->  printf("")
+
+    |"D2" -> match (r1,r2,r3,r4,r5,r6,r7,r8) with
+             | _,_,_,(Y,Y,Y),_,_,_,_  // r4 Y null ~D1 ~Middle
+             | _,(Y,_,_),_,(_,Y,_),_,_,(Y,_,_),_ -> printfn("\nHey Y has nulled now ! ")    // B2-D2-F2 Y null
+
+             | _,_,_,(M,M,M),_,_,_,_  // r4 Y null ~D1 ~Middle
+             | _,(M,_,_),_,(_,M,_),_,_,(M,_,_),_ -> printfn("\nHey M has nulled now ! ")    // B2-D2-F2 Y null
+
+             |_ ->  printf("")
+
+
+    |"D3" -> match (r1,r2,r3,r4,r5,r6,r7,r8) with
+             | _,_,_,(Y,Y,Y),_,_,_,_   // r4 Y null ~D1 ~Middle
+             | _,_,(Y,_,_),(_,_,Y),_,(Y,_,_),_,_ -> printfn("\nHey Y has nulled now ! ")    // C3-D3-E3 Y null
+
+             | _,_,_,(M,M,M),_,_,_,_   // r4 Y null ~D1 ~Middle
+             | _,_,(M,_,_),(_,_,M),_,(M,_,_),_,_ -> printfn("\nHey M has nulled now ! ")    // C3-D3-E3 Y null
+
+             |_ ->  printf("")
+
+    |"D5" -> match (r1,r2,r3,r4,r5,r6,r7,r8) with
+             | _,_,_,_,(Y,Y,Y),_,_,_     // r5 Y null ~D2 ~Middle
+             | _,_,(_,_,Y),_,(Y,_,_),(_,_,Y),_,_  -> printfn("\nHey Y has nulled now ! ")    // C5-D5-E5
+
+             | _,_,_,_,(M,M,M),_,_,_     // r5 Y null ~D2 ~Middle
+             | _,_,(_,_,M),_,(M,_,_),(_,_,M),_,_  -> printfn("\nHey M has nulled now ! ")    // C5-D5-E5
+
+             |_ ->  printf("")
+
+    |"D6" -> match (r1,r2,r3,r4,r5,r6,r7,r8) with
+             | _,_,_,_,(Y,Y,Y),_,_,_     // r5 Y null ~D2 ~Middle
+             | _,(_,_,Y),_,_,(_,Y,_),_,(_,_,Y),_ -> printfn("\nHey Y has nulled now ! ")    // B6-D6-F6 Y null
+
+             | _,_,_,_,(M,M,M),_,_,_     // r5 Y null ~D2 ~Middle
+             | _,(_,_,M),_,_,(_,M,_),_,(_,_,M),_ -> printfn("\nHey M has nulled now ! ")    // B6-D6-F6 Y null
+
+             |_ ->  printf("")
+
+    |"D7" -> match (r1,r2,r3,r4,r5,r6,r7,r8) with
+             | _,_,_,_,(Y,Y,Y),_,_,_     // r5 Y null ~D2 ~Middle
+             | (_,_,Y),_,_,_,(_,_,Y),_,_,(_,_,Y) -> printfn("\nHey Y has nulled now ! ")    // A7-D7-G7 Y null ~rightmost vertical
+
+             | _,_,_,_,(M,M,M),_,_,_     // r5 Y null ~D2 ~Middle
+             | (_,_,M),_,_,_,(_,_,M),_,_,(_,_,M) -> printfn("\nHey M has nulled now ! ")    // A7-D7-G7 Y null ~rightmost vertical
+
+             |_ ->  printf("")
+
+    |"E3" -> match (r1,r2,r3,r4,r5,r6,r7,r8) with
+             | _,_,_,_,_,(Y,Y,Y),_,_   // r6 Y null ~E
+             | _,_,(Y,_,_),(_,_,Y),_,(Y,_,_),_,_    // C3-D3-E3 Y null
+             | _,_,_,_,_,(Y,_,_),(Y,_,_),(Y,_,_) -> printfn("\nHey Y has nulled now ! ")   // E3-F2-G1
+
+             | _,_,_,_,_,(M,M,M),_,_   // r6 Y null ~E
+             | _,_,(M,_,_),(_,_,M),_,(M,_,_),_,_    // C3-D3-E3 Y null
+             | _,_,_,_,_,(M,_,_),(M,_,_),(M,_,_) -> printfn("\nHey M has nulled now ! ")   // E3-F2-G1
+
+             |_ ->  printf("")
+
+
+    |"E4" -> match (r1,r2,r3,r4,r5,r6,r7,r8) with
+             | _,_,_,_,_,(Y,Y,Y),_,_   // r6 Y null ~E
+             | _,_,_,_,_,(_,Y,_),(_,Y,_),(_,Y,_) -> printfn("\nHey Y has nulled now ! ")    // G4-F4-E4 Y null ~Middle
+
+             | _,_,_,_,_,(M,M,M),_,_   // r6 Y null ~E
+             | _,_,_,_,_,(_,M,_),(_,M,_),(_,M,_) -> printfn("\nHey M has nulled now ! ")    // G4-F4-E4 Y null ~Middle
+
+             |_ ->  printf("")
+
+    |"E5" -> match (r1,r2,r3,r4,r5,r6,r7,r8) with
+             | _,_,_,_,_,(Y,Y,Y),_,_   // r6 Y null ~E
+             | _,_,(_,_,Y),_,(Y,_,_),(_,_,Y),_,_  // C5-D5-E5
+             | _,_,_,_,_,(_,_,Y),(_,_,Y),(_,_,Y) -> printfn("\nHey Y has nulled now ! ")    // G7-F6-E5 Y null
+
+             | _,_,_,_,_,(M,M,M),_,_   // r6 Y null ~E
+             | _,_,(_,_,M),_,(M,_,_),(_,_,M),_,_  // C5-D5-E5
+             | _,_,_,_,_,(_,_,M),(_,_,M),(_,_,M) -> printfn("\nHey M has nulled now ! ")    // G7-F6-E5 Y null
+
+             |_ ->  printf("")
+
+    |"F2" -> match (r1,r2,r3,r4,r5,r6,r7,r8) with
+             | _,(Y,_,_),_,(_,Y,_),_,_,(Y,_,_),_     // B2-D2-F2 Y null
+             | _,_,_,_,_,_,(Y,Y,Y),_    // r7 Y null ~F
+             | _,_,_,_,_,(Y,_,_),(Y,_,_),(Y,_,_) -> printfn("\nHey Y has nulled now ! ")   // E3-F2-G1
+
+             | _,(M,_,_),_,(_,M,_),_,_,(M,_,_),_     // B2-D2-F2 Y null
+             | _,_,_,_,_,_,(M,M,M),_    // r7 Y null ~F
+             | _,_,_,_,_,(M,_,_),(M,_,_),(M,_,_) -> printfn("\nHey M has nulled now ! ")   // E3-F2-G1
+
+             |_ ->  printf("")
+
+    |"F4" -> match (r1,r2,r3,r4,r5,r6,r7,r8) with
+             | _,_,_,_,_,(_,Y,_),(_,Y,_),(_,Y,_)    // G4-F4-E4 Y null ~Middle
+             | _,_,_,_,_,_,(Y,Y,Y),_ -> printfn("\nHey Y has nulled now ! ")    // r7 Y null ~F
+
+             | _,_,_,_,_,(_,M,_),(_,M,_),(_,M,_)    // G4-F4-E4 Y null ~Middle
+             | _,_,_,_,_,_,(M,M,M),_ -> printfn("\nHey M has nulled now ! ")    // r7 Y null ~F
+
+             |_ ->  printf("")
+
+    |"F6" -> match (r1,r2,r3,r4,r5,r6,r7,r8) with
+             | _,_,_,_,_,_,(Y,Y,Y),_    // r7 Y null ~F
+             | _,(_,_,Y),_,_,(_,Y,_),_,(_,_,Y),_   // B6-D6-F6 Y null
+             | _,_,_,_,_,(_,_,Y),(_,_,Y),(_,_,Y) -> printfn("\nHey Y has nulled now ! ")    // G7-F6-E5 Y null
+
+             | _,_,_,_,_,_,(M,M,M),_    // r7 Y null ~F
+             | _,(_,_,M),_,_,(_,M,_),_,(_,_,M),_   // B6-D6-F6 Y null
+             | _,_,_,_,_,(_,_,M),(_,_,M),(_,_,M) -> printfn("\nHey M has nulled now ! ")    // G7-F6-E5 Y null
+
+             |_ ->  printf("")
+
+    |"G1" -> match (r1,r2,r3,r4,r5,r6,r7,r8) with
+             | _,_,_,_,_,_,_,(Y,Y,Y)  // r8 Y null ~G
+             | (Y,_,_),_,_,(Y,_,_),_,_,_,(Y,_,_)    // A1-D1-G1 Y null ~leftmost vertical
+             | _,_,_,_,_,(Y,_,_),(Y,_,_),(Y,_,_) -> printfn("\nHey Y has nulled now ! ")   // E3-F2-G1
+
+             | _,_,_,_,_,_,_,(M,M,M)  // r8 Y null ~G
+             | (M,_,_),_,_,(M,_,_),_,_,_,(M,_,_)    // A1-D1-G1 Y null ~leftmost vertical
+             | _,_,_,_,_,(M,_,_),(M,_,_),(M,_,_) -> printfn("\nHey M has nulled now ! ")   // E3-F2-G1
+
+             |_ ->  printf("")
+
+    |"G4" -> match (r1,r2,r3,r4,r5,r6,r7,r8) with
+             | _,_,_,_,_,_,_,(Y,Y,Y)  // r8 Y null ~G
+             | _,_,_,_,_,(_,Y,_),(_,Y,_),(_,Y,_)  -> printfn("\nHey Y has nulled now ! ")   // G4-F4-E4 Y null ~Middle
+
+             | _,_,_,_,_,_,_,(M,M,M)  // r8 Y null ~G
+             | _,_,_,_,_,(_,M,_),(_,M,_),(_,M,_)  -> printfn("\nHey M has nulled now ! ")   // G4-F4-E4 Y null ~Middle
+
+             |_ ->  printf("")
+
+    |"G7" -> match (r1,r2,r3,r4,r5,r6,r7,r8) with
+             | _,_,_,_,_,_,_,(Y,Y,Y)  // r8 Y null ~G
+             | _,_,_,_,_,(_,_,Y),(_,_,Y),(_,_,Y)    // G7-F6-E5 Y null
+             | (_,_,Y),_,_,_,(_,_,Y),_,_,(_,_,Y) -> printfn("\nHey Y has nulled now ! ")    // A7-D7-G7 Y null ~rightmost vertical
+
+             | _,_,_,_,_,_,_,(M,M,M)  // r8 Y null ~G
+             | _,_,_,_,_,(_,_,M),(_,_,M),(_,_,M)    // G7-F6-E5 Y null
+             | (_,_,M),_,_,_,(_,_,M),_,_,(_,_,M) -> printfn("\nHey M has nulled now ! ")    // A7-D7-G7 Y null ~rightmost vertical
+
+             |_ ->  printf("")
+
+    | _ ->  printf("") 
+    
+ 
  
 let isBlank game position =
     match position, game with
@@ -206,7 +408,7 @@ let makeMove symbol (Board (r1,r2,r3,r4,r5,r6,r7,r8)) position =
             | "G7" -> r1,r2,r3,r4,r5,r6,r7,changeCol 2 r8
             | _ -> failwith "i hate myself"
         Board data
-    nullCheck newBoard
+    nullCheck newBoard position
     Ongoing newBoard
     
     
@@ -214,8 +416,9 @@ let makeMove symbol (Board (r1,r2,r3,r4,r5,r6,r7,r8)) position =
  
 let rec run player game =
     // need to find the blank cells that can be used...
-    printBoard game
+    printBoard game   
     printfn "%A's turn.  Type the number of the cell that you want to play into." player
+     
     let n = System.Console.ReadLine()
     match n with
     | "A1" | "A4" | "A7" 
