@@ -9,8 +9,80 @@ type Cell =
 type GameBoard =
 | Board of (Cell*Cell*Cell)*(Cell*Cell*Cell)*(Cell*Cell*Cell)*(Cell*Cell*Cell)*(Cell*Cell*Cell)*(Cell*Cell*Cell)*(Cell*Cell*Cell)*(Cell*Cell*Cell)
 
-// defining the functions that will operate on this data
+type Result =
+| Ongoing of GameBoard
+| Winner of Cell * GameBoard
+| Draw
 
+let swapPlayer x =
+    match x with
+    | Y -> M
+    | M -> Y
+    | Blank -> failwith "RUN FOR YOUR LIVES THE END IS NIGH"
+
+(*let listOfNulled = []
+
+let nulledComb game =
+    let (Board (r1,r2,r3,r4,r5,r6,r7,r8)) = game
+    let xs = [r1;r2;r3;r4;r5;r6;r7;r8]
+    let rec nullTuple list =
+     match list with
+     |[] -> (Y,Y,Y)
+     |_::rest ->
+        match list.Head with
+        | (Y,Y,Y) -> list.Head
+        | _ -> nullTuple rest
+     
+    (nullTuple xs)::listOfNulled
+    *)
+
+let nullCheck game =
+    let (Board (r1,r2,r3,r4,r5,r6,r7,r8)) = game
+    match r1,r2,r3,r4,r5,r6,r7,r8 with
+    | (Y,Y,Y),_,_,_,_,_,_,_     // r1 Y null ~A
+    | _,(Y,Y,Y),_,_,_,_,_,_     // r2 Y null ~B
+    | _,_,(Y,Y,Y),_,_,_,_,_     // r3 Y null ~C
+    | _,_,_,(Y,Y,Y),_,_,_,_     // r4 Y null ~D1 ~Middle
+    | _,_,_,_,(Y,Y,Y),_,_,_     // r5 Y null ~D2 ~Middle
+    | _,_,_,_,_,(Y,Y,Y),_,_     // r6 Y null ~E
+    | _,_,_,_,_,_,(Y,Y,Y),_     // r7 Y null ~F
+    | _,_,_,_,_,_,_,(Y,Y,Y) ->  // r8 Y null ~G
+  (*  | (Y,_,_),(Y,_,_),(Y,_,_),_,_,_,_,_     // A1-B2-C3 Y null
+    | (_,Y,_),(_,Y,_),(_,Y,_),_,_,_,_,_     // A4-B4-C4 Y null ~Middle
+    | (_,_,Y),(_,_,Y),(_,_,Y),_,_,_,_,_    // A7-B6-C5 Y null
+    | (Y,_,_),_,_,(Y,_,_),_,_,_,(Y,_,_)     // A1-D1-G1 Y null ~leftmost vertical
+    | _,(Y,_,_),_,(_,Y,_),_,_,(Y,_,_),_     // B2-D2-F2 Y null
+    | _,_,(Y,_,_),(_,_,Y),_,(Y,_,_),_,_     // C3-D3-E3 Y null
+    | _,_,_,_,_,(Y,_,_),(Y,_,_),(Y,_,_)     // G1-F2-E3 Y null
+    | _,_,_,_,_,(_,Y,_),(_,Y,_),(_,Y,_)     // G4-F4-E4 Y null ~Middle
+    | _,_,_,_,_,(_,_,Y),(_,_,Y),(_,_,Y)     // G7-F6-E5 Y null
+    | (_,_,Y),_,_,_,(_,_,Y),_,_,(_,_,Y)     // A7-D7-G7 Y null ~rightmost vertical
+    | _,(_,_,Y),_,_,(_,Y,_),_,(_,_,Y),_     // B6-D6-F6 Y null
+    | _,_,(_,_,Y),_,(Y,_,_),(_,_,Y),_,_ ->  // G4-F4-E4 Y null  *)
+        printfn("Hey Y has nulled now ! ")
+    | _ -> printf("") (*
+    | (M,M,M),_,_,_,_,_,_,_     // r1 M null ~A                         // This entire part commented because it takes longer to search
+    | _,(M,M,M),_,_,_,_,_,_     // r2 M null ~B
+    | _,_,(M,M,M),_,_,_,_,_     // r3 M null ~C
+    | _,_,_,(M,M,M),_,_,_,_     // r4 M null ~D1 ~Middle
+    | _,_,_,_,(M,M,M),_,_,_     // r5 M null ~D2 ~Middle
+    | _,_,_,_,_,(M,M,M),_,_     // r6 M null ~E
+    | _,_,_,_,_,_,(M,M,M),_     // r7 M null ~F
+    | _,_,_,_,_,_,_,(M,M,M)     // r8 M null ~G
+    | (M,_,_),(M,_,_),(M,_,_),_,_,_,_,_     // A1-B2-C3 M null                           // But then this part commented because it throws an exception of OutOfMemory, will consult Mr Yusuf
+    | (_,M,_),(_,M,_),(_,M,_),_,_,_,_,_     // A4-B4-C4 M null ~Middle
+    | (_,_,M),(_,_,M),(_,_,M),_,_,_,_,_    // A7-B6-C5 M null
+    | (M,_,_),_,_,(M,_,_),_,_,_,(M,_,_)     // A1-D1-G1 M null ~leftmost vertical
+    | _,(M,_,_),_,(_,M,_),_,_,(M,_,_),_     // B2-D2-F2 M null
+    | _,_,(M,_,_),(_,_,M),_,(M,_,_),_,_     // C3-D3-E3 M null
+    | _,_,_,_,_,(M,_,_),(M,_,_),(M,_,_)     // G1-F2-E3 M null
+    | _,_,_,_,_,(_,M,_),(_,M,_),(_,M,_)     // G4-F4-E4 M null ~Middle
+    | _,_,_,_,_,(_,_,M),(_,_,M),(_,_,M)     // G7-F6-E5 M null
+    | (_,_,M),_,_,_,(_,_,M),_,_,(_,_,M)     // A7-D7-G7 M null ~rightmost vertical
+    | _,(_,_,M),_,_,(_,M,_),_,(_,_,M),_     // B6-D6-F6 M null
+    | _,_,(_,_,M),_,(M,_,_),(_,_,M),_,_ ->  // G4-F4-E4 M null 
+        printfn("Hey M has nulled now ! ")  *)
+ 
 let isBlank game position =
     match position, game with
     | "A1", Board ((Blank,_,_),_,_,_,_,_,_,_) -> true
@@ -43,72 +115,60 @@ let blankBoard =
     let blankRow = Blank, Blank, Blank
     Board (blankRow, blankRow, blankRow,blankRow,blankRow,blankRow,blankRow,blankRow)
 
-let printBoard (Board (r1, r2, r3,r4,r5,r6,r7,r8)) =
-    System.Console.Clear ()
-    let cell offset value n =
-        match value with
-        | Y -> " Y  "
-        | M -> " M  "
-        |Blank -> "   "
-        //| //Blank -> string (offset+n)
-    let printRow (x,y,z) offset =
-        let cell = cell offset
-        printfn "\t\t\tA\t |%s| \t\t\t\t|%s|\t\t\t\t|%s|" (cell x 1) (cell y 2) (cell z 3)
-    let printRow2 (x,y,z) offset =
-        let cell = cell offset
-        printfn "\t\t\tB\t |\t |%s| \t\t\t|%s|\t\t\t|%s| \t    |" (cell x 1) (cell y 2) (cell z 3)
-    let printRow3 (x,y,z) offset =
-        let cell = cell offset
-        printfn "\t\t\tC\t |\t |\t |%s| \t\t|%s|\t\t|%s|\t    | \t    |" (cell x 1) (cell y 2) (cell z 3)
-    let printRow4 (x,y,z) offset =
-        let cell = cell offset
-        printfn "\t\t\tD\t |%s| \t |%s|\t |%s|" (cell x 1) (cell y 2) (cell z 3)
-    let printRow5 (x,y,z) offset =
-        let cell = cell offset
-        printfn "\t\t\t\t\t\t\t\t\t\t |%s| \t|%s|\t|%s|" (cell x 1) (cell y 2) (cell z 3)
-    let printRow8 (x,y,z) offset =
-        let cell = cell offset
-        printfn "\t\t\tG\t |%s| \t\t\t\t|%s|\t\t\t\t|%s|" (cell x 1) (cell y 2) (cell z 3)
-    let printRow7 (x,y,z) offset =
-        let cell = cell offset
-        printfn "\t\t\tF\t |\t |%s| \t\t\t|%s|\t\t\t|%s| \t    |" (cell x 1) (cell y 2) (cell z 3)
-    let printRow6 (x,y,z) offset =
-        let cell = cell offset
-        printfn "\t\t\tE\t |\t |\t |%s| \t\t|%s|\t\t|%s|\t    | \t    |" (cell x 1) (cell y 2) (cell z 3)
-    let printSeparator () = printfn "\t\t\t\t |------------------------------------------------------------------|"
-    //let printSeparator () = printfn "\t\t\t\t --\t\t\t\t+---\t\t\t\t+--"
-    //let printSeparator2 () = printfn "\t\t\t\t\t --\t\t\t+---\t\t\t+--"
-    let printSeparator2 () = printfn "\t\t\t\t |\t |--------------------------------------------------|\t\t|"
-    //let printSeparator3 () = printfn "\t\t\t\t\t|\t --\t\t+---\t\t+--"
-    let printSeparator3 () = printfn "\t\t\t\t |\t |\t ------------------------------------ \t    |"
-    let printSeparator4 () = printfn "\t\t\t\t |--------------------\t\t\t\t\t\t\t|"
-    let printSeparator5 () = printfn "\t\t\t\t\t\t\t\t\t\t --------------------"
-    printfn "\n\n\n\n\n\n\n\t\t\t\t   1 \t   2 \t   3 \t\t  4 \t   \t  5 \t  6 \t  7 \n\n "
-    printRow r1 0
-    printSeparator ()
-    printfn "\t\t\t\t |\t\t\t\t\t\t\t\t\t|\n"
-    printRow2 r2 3
-    printSeparator2 ()
-    printfn "\t\t\t\t |\t\t\t\t\t\t\t\t\t|\n"
-    printRow3 r3 6
-    printSeparator3 ()
-    printfn "\t\t\t\t |\t\t\t\t\t\t\t\t\t|\n"
-    printfn "\t\t\t\t |\t\t\t\t\t\t\t\t\t|\n"
-    printRow4 r4 9
-    printSeparator4 ()
-    printRow5 r5 12
-    printSeparator5 ()
-    printfn "\t\t\t\t |\t\t\t\t\t\t\t\t\t|\n"
-    printfn "\t\t\t\t |\t\t\t\t\t\t\t\t\t|\n"
-    printRow6 r6 15
-    printSeparator3 ()
-    printfn "\t\t\t\t |\t\t\t\t\t\t\t\t\t|\n"
-    printRow7 r7 18
-    printSeparator2 ()
-    printfn "\t\t\t\t |\t\t\t\t\t\t\t\t\t|\n"
-    printRow8 r8 21
-    printSeparator ()
-  
+let printBoard (Board (r1, r2, r3,r4,r5,r6,r7,r8))= 
+                   
+                  //System.Console.Clear ()
+                  let tc value = 
+                            match value with
+                            |Y -> 'Y'
+                            |M -> 'M'
+                            |_ -> ' '
+                  let a1, a4, a7 = r1
+                  let b2, b4, b6 = r2
+                  let c3, c4, c5 = r3
+                  let d1, d2, d3 = r4
+                  let d5, d6, d7 = r5
+                  let e3, e4, e5 = r6
+                  let f2, f4, f6 = r7
+                  let g1, g4, g7 = r8
+
+                  let top = printf "\n\n\n\t\t\t\t  1    2    3       4      5    6    7 \n\n\n"
+                  let printBdA = printfn "\t\t\tA\t %A ______________%A______________%A" (tc a1) (tc a4) (tc a7)
+                                 printfn "\t\t\t\t |  \               |              / |"
+                                 printfn "\t\t\t\t |   \              |             /  | "
+                                 printfn "\t\t\t\t |    \             |            /   |"
+                  let printBdB = printfn "\t\t\tB\t |    %A__________%A_________%A   |" (tc b2) (tc b4) (tc b6)
+                                 printfn "\t\t\t\t |     |\           |          /|    |"
+                                 printfn "\t\t\t\t |     | \          |         / |    |"
+                                 printfn "\t\t\t\t |     |  \         |        /  |    |"
+                  let printBdC = printfn "\t\t\tC\t |     |   %A_____%A____%A   |    |" (tc c3) (tc c4) (tc c5)
+                                 printfn "\t\t\t\t |     |    |              |    |    |"
+                                 printfn "\t\t\t\t |     |    |              |    |    |"
+                                 printfn "\t\t\t\t |     |    |              |    |    |"
+                  let printBdD =
+                                 printfn "\t\t\tD\t %A__%A__%A            %A__%A__%A" (tc d1) (tc d2) (tc d3) (tc d5) (tc d6) (tc d7)
+                                 printfn "\t\t\t\t |     |    |              |    |    |"
+                                 
+                  let printBdE = printfn "\t\t\t\t |     |    |              |    |    |"
+                                 printfn "\t\t\t\t |     |    |              |    |    |"
+                                 printfn "\t\t\tE\t |     |   %A_____%A____%A   |    |" (tc e3) (tc e4) (tc e5)
+                         
+                  let printBdF = printfn "\t\t\t\t |     |   /        |        \  |    |"
+                                 printfn "\t\t\t\t |     |  /         |         \ |    |"
+                                 printfn "\t\t\t\t |     | /          |          \|    |"
+                                 printfn "\t\t\tF\t |    %A__________%A_________%A   |" (tc f2) (tc f4) (tc f6)
+
+                  let printBdG  = printfn "\t\t\t\t |    /             |            \   |"
+                                  printfn "\t\t\t\t |   /              |             \  | "
+                                  printfn "\t\t\t\t |  /               |              \ |"
+                                  printfn "\t\t\tG\t  %A _____________%A_____________%A" (tc g1) (tc g4) (tc g7)    
+                  printBdA
+                  printBdB
+                  printBdC
+                  printBdD
+                  printBdE
+                  printBdF
+                  printBdG
 
 let makeMove symbol (Board (r1,r2,r3,r4,r5,r6,r7,r8)) position =
     let newBoard =
@@ -146,17 +206,26 @@ let makeMove symbol (Board (r1,r2,r3,r4,r5,r6,r7,r8)) position =
             | "G7" -> r1,r2,r3,r4,r5,r6,r7,changeCol 2 r8
             | _ -> failwith "i hate myself"
         Board data
-    let k = newBoard
-    k
+    nullCheck newBoard
+    Ongoing newBoard
+    
+    
 
- (*
+ 
 let rec run player game =
     // need to find the blank cells that can be used...
     printBoard game
     printfn "%A's turn.  Type the number of the cell that you want to play into." player
     let n = System.Console.ReadLine()
     match n with
-    | "A1" | "A4" | "A7" | "B2" | "B4" | "B6" | "C3" | "C4" | "C5"| "D1" | "D2" | "D3" | "D5" | "D6" | "D7" | "E3" | "E4" | "E5" | "F2" | "F4" | "F6" | "G1" | "G4" | "G7"  ->
+    | "A1" | "A4" | "A7" 
+    | "B2" | "B4" | "B6" 
+    | "C3" | "C4" | "C5"
+    | "D1" | "D2" | "D3" 
+    | "D5" | "D6" | "D7" 
+    | "E3" | "E4" | "E5" 
+    | "F2" | "F4" | "F6" 
+    | "G1" | "G4" | "G7"  ->
         match isBlank game n with
         | true -> makeMove player game n
         | _ -> run player game
@@ -168,78 +237,40 @@ let rec runGame currentPlayer game =
         match System.Console.ReadLine() with
         | "Y" | "y" -> runGame Y blankBoard
         | _ -> ()
-    playAgain ()
-*)
+    match run currentPlayer game with
+    | Ongoing newBoard -> runGame (swapPlayer currentPlayer) newBoard
+    | Winner (player, board) ->
+        printBoard board
+        printfn "Winner is %A" player
+        playAgain ()
+    | Draw ->
+        printfn "Draaaaw"
+        playAgain ()
 //let (a1,a4,a7): Cell = (Blank, Blank, Blank) 
 //a1 a4 a7 b2 b4 b6 c3 c4 c5 d1 d2 d3 d5 d6 d7 e3 e4 e5 f2 f4 f6 g1 g4 g7
 
-//let board = 
-          // let 
-           
-let printBoard2 (Board (r1, r2, r3,r4,r5,r6,r7,r8))= 
-                   
-                  //System.Console.Clear ()
-                  let tc value = 
-                            match value with
-                            |Y -> 'Y'
-                            |M -> 'M'
-                            |_ -> ' '
-                  let a1, a4, a7 = r1
-                  let b2, b4, b6 = r2
-                  let c3, c4, c5 = r3
-                  let d1, d2, d3 = r4
-                  let d5, d6, d7 = r5
-                  let e3, e4, e5 = r6
-                  let f2, f4, f6 = r6
-                  let g1, g4, g7 = r8
+     
 
-
-                  let printBdA = printfn " %A ______________%A______________%A" (tc a1) (tc a4) (tc a7)
-                                 printfn " |  \               |              / |"
-                                 printfn " |   \              |             /  | "
-                                 printfn " |    \             |            /   |"
-                  let printBdB = printfn " |    %A__________%A_________%A   |" (tc b2) (tc b4) (tc b6)
-                                 printfn " |     |\           |          /|    |"
-                                 printfn " |     | \          |         / |    |"
-                                 printfn " |     |  \         |        /  |    |"
-                  let printBdC = printfn " |     |   %A_____%A____%A   |    |" (tc c3) (tc c4) (tc c5)
-                                 printfn " |     |    |              |    |    |"
-                                 printfn " |     |    |              |    |    |"
-                                 printfn " |     |    |              |    |    |"
-                  let printBdD =
-                                 printfn " %A__%A__%A            %A__%A__%A" (tc d1) (tc d2) (tc d3) (tc d5) (tc d6) (tc d7)
-                                 printfn " |     |    |              |    |    |"
-                                 
-                  let printBdE = printfn " |     |    |              |    |    |"
-                                 printfn " |     |    |              |    |    |"
-                                 printfn " |     |   %A_____%A____%A   |    |" (tc e3) (tc e4) (tc e5)
-                         
-                  let printBdF = printfn " |     |   /        |        \  |    |"
-                                 printfn " |     |  /         |         \ |    |"
-                                 printfn " |     | /          |          \|    |"
-                                 printfn " |    %A__________%A_________%A   |" (tc f2) (tc f4) (tc f6)
-
-                  let printBdG  = printfn " |    /             |            \   |"
-                                  printfn " |   /              |             \  | "
-                                  printfn " |  /               |              \ |"
-                                  printfn "  %A _____________%A_____________%A" (tc g1) (tc g4) (tc g7)    
-                  printBdA
-                  printBdB
-                  printBdC
-                  printBdD
-                  printBdE
-                  printBdF
-                  printBdG
 
 [<EntryPoint>]
 let main argv =
     //runGame Y blankBoard
-    printBoard blankBoard
-    printf "\n\n\n"
-    printBoard2  blankBoard
+   // printBoard blankBoard
     
-
+    runGame Y blankBoard
+    
+    
     Console.Read()
 
     //runGame X blankBoard
     0 // ret
+
+(*
+                       ----------------------------------------------- PROGRESS ------------------------------------------------------
+                       1. CAN DISPLAY NICE BOARD                                                                                 _DONE
+                       2. CAN PLACE PIECES (COWS) ON THE BOARD ACCORDING TO NAMED CELLS (A-G -> 1-7 )                            _DONE
+                       3. CAN CHECK FOR NULL COWS - 3 PAIRS                                                               _IN PROGRESS
+                          ISSUES : CHECK ONLY FOR THE FIRST PIECE AND FOR WITHOUT COMBINED TUPLES
+                                     WHEN COMBINED -> TAKES LONGER TO TERMINATE
+                                   FOR CHECKING FOR BOTH PLAYERS PIECES -> THROWS AND INTERNAL EXCEPTION  
+*)
