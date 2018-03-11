@@ -957,7 +957,7 @@ let rec runGame currentPlayer game i =
     match i with
     | 0 ->  match currentPlayer with
             | Y -> match Y_cows with
-                   | 2 -> printf "DEAD"
+                   | 2 -> printf "\n\nGame Over!!!! %A is the winner" currentPlayer
                    | 3 -> match run2 currentPlayer game with
                             | Mill newBoard-> printBoard newBoard
                                               let newB = eliminate newBoard currentPlayer
@@ -970,22 +970,19 @@ let rec runGame currentPlayer game i =
                                           let newB = eliminate newBoard currentPlayer
                                           runGame (swapPlayer currentPlayer) newB 0
                         | Ongoing newBoard -> runGame (swapPlayer currentPlayer) newBoard 0
-                        | _ -> printfn "OVER"
             | M -> match M_cows with
-                   | 2 -> printf "DEAD"
+                   | 2 -> printf "\n\nGame Over!!!! %A is the winner" currentPlayer
                    | 3 -> match run2 currentPlayer game with
                             | Mill newBoard-> printBoard newBoard
                                               let newB = eliminate newBoard currentPlayer
                                               runGame (swapPlayer currentPlayer) newB 0
                             | Ongoing newBoard -> runGame (swapPlayer currentPlayer) newBoard 0
-                            | _ -> printfn "OVER"
                    | _ ->
                         match run1 currentPlayer game with
                         | Mill newBoard-> printBoard newBoard
                                           let newB = eliminate newBoard currentPlayer
                                           runGame (swapPlayer currentPlayer) newB 0
                         | Ongoing newBoard -> runGame (swapPlayer currentPlayer) newBoard 0
-                        | _ -> printfn "OVER"
             | _ -> ()
     | _-> match run currentPlayer game with
             | Mill newBoard-> printBoard newBoard
