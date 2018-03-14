@@ -13,6 +13,7 @@ type Result =
 | Mill of GameBoard
 | Ongoing of GameBoard
 
+let Ycolor = Console.Color
 let swapPlayer x =
     match x with
     | Y -> M
@@ -508,96 +509,94 @@ let cowIN_mill pos (list:int list) =
     | 1 -> true
     | _ -> false
 
+let input_validation (posFrom:string) (posTo:string) =
+                    let moveFrom = posFrom.ToUpper()
+                    let moveTo = posTo.ToUpper()
+                    match moveFrom with
+                    | "A1" | "A4" | "A7" 
+                    | "B2" | "B4" | "B6" 
+                    | "C3" | "C4" | "C5"
+                    | "D1" | "D2" | "D3" 
+                    | "D5" | "D6" | "D7" 
+                    | "E3" | "E4" | "E5" 
+                    | "F2" | "F4" | "F6" 
+                    | "G1" | "G4" | "G7"  ->
+                        match moveTo with
+                        | "A1" | "A4" | "A7" 
+                        | "B2" | "B4" | "B6" 
+                        | "C3" | "C4" | "C5"
+                        | "D1" | "D2" | "D3" 
+                        | "D5" | "D6" | "D7" 
+                        | "E3" | "E4" | "E5" 
+                        | "F2" | "F4" | "F6" 
+                        | "G1" | "G4" | "G7"  -> true
+                        | _ -> false
+                    | _ -> false
+
+let input_vallidation2 (n:string) =
+    match n with
+    | "A1" | "A4" | "A7" 
+    | "B2" | "B4" | "B6" 
+    | "C3" | "C4" | "C5"
+    | "D1" | "D2" | "D3" 
+    | "D5" | "D6" | "D7" 
+    | "E3" | "E4" | "E5" 
+    | "F2" | "F4" | "F6" 
+    | "G1" | "G4" | "G7" -> true
+    | _ -> false
+
+let updateBoard (Board (r1,r2,r3,r4,r5,r6,r7,r8)) symbol position =
+                        let newBoard =
+                            let changeCol col (a,b,c) =
+                                match col with
+                                | 0 -> symbol,b,c
+                                | 1 -> a,symbol,c
+                                | 2 -> a,b,symbol
+                                | _ -> failwith "NOOOOOOOOooooooooooooooo it's all gone to ......... the dogs"
+                            let data =
+                                match position with
+                                | "A1" -> changeCol 0 r1,r2,r3,r4,r5,r6,r7,r8
+                                | "A4" -> changeCol 1 r1,r2,r3,r4,r5,r6,r7,r8
+                                | "A7" -> changeCol 2 r1,r2,r3,r4,r5,r6,r7,r8
+                                | "B2" -> r1,changeCol 0 r2,r3,r4,r5,r6,r7,r8
+                                | "B4" -> r1,changeCol 1 r2,r3,r4,r5,r6,r7,r8
+                                | "B6" -> r1,changeCol 2 r2,r3,r4,r5,r6,r7,r8
+                                | "C3" -> r1,r2,changeCol 0 r3,r4,r5,r6,r7,r8
+                                | "C4" -> r1,r2,changeCol 1 r3,r4,r5,r6,r7,r8
+                                | "C5" -> r1,r2,changeCol 2 r3,r4,r5,r6,r7,r8
+                                | "D1" -> r1,r2,r3,changeCol 0 r4,r5,r6,r7,r8
+                                | "D2" -> r1,r2,r3,changeCol 1 r4,r5,r6,r7,r8
+                                | "D3" -> r1,r2,r3,changeCol 2 r4,r5,r6,r7,r8
+                                | "D5" -> r1,r2,r3,r4,changeCol 0 r5,r6,r7,r8
+                                | "D6" -> r1,r2,r3,r4,changeCol 1 r5,r6,r7,r8
+                                | "D7" -> r1,r2,r3,r4,changeCol 2 r5,r6,r7,r8
+                                | "E3" -> r1,r2,r3,r4,r5,changeCol 0 r6,r7,r8
+                                | "E4" -> r1,r2,r3,r4,r5,changeCol 1 r6,r7,r8
+                                | "E5" -> r1,r2,r3,r4,r5,changeCol 2 r6,r7,r8
+                                | "F2" -> r1,r2,r3,r4,r5,r6,changeCol 0 r7,r8
+                                | "F4" -> r1,r2,r3,r4,r5,r6,changeCol 1 r7,r8
+                                | "F6" -> r1,r2,r3,r4,r5,r6,changeCol 2 r7,r8
+                                | "G1" -> r1,r2,r3,r4,r5,r6,r7,changeCol 0 r8
+                                | "G4" -> r1,r2,r3,r4,r5,r6,r7,changeCol 1 r8
+                                | "G7" -> r1,r2,r3,r4,r5,r6,r7,changeCol 2 r8
+                                | _ -> failwith "i hate myself"
+                            Board data
+                        newBoard
+
 let rec eliminate (Board (r1,r2,r3,r4,r5,r6,r7,r8)) player ylist mlist =
     let game = Board (r1,r2,r3,r4,r5,r6,r7,r8)
     printf (" %A has mill! select a position to eliminate %A  :  ") player (swapPlayer player)
-    let position = Console.ReadLine()
+    let position = Console.ReadLine().ToUpper()
     
-    match (playerAtPos game position) with
-    | Y -> match player with
-           | M ->
-                match cowIN_mill position mlist with
-                | true -> eliminate game player ylist mlist
-                | _ ->
-                        let newBoard =
-                            let changeCol col (a,b,c) =
-                                match col with
-                                | 0 -> Blank,b,c
-                                | 1 -> a,Blank,c
-                                | 2 -> a,b,Blank
-                                | _ -> failwith "NOOOOOOOOooooooooooooooo it's all gone to ......... the dogs"
-                            let data =
-                                match position with
-                                | "A1" -> changeCol 0 r1,r2,r3,r4,r5,r6,r7,r8
-                                | "A4" -> changeCol 1 r1,r2,r3,r4,r5,r6,r7,r8
-                                | "A7" -> changeCol 2 r1,r2,r3,r4,r5,r6,r7,r8
-                                | "B2" -> r1,changeCol 0 r2,r3,r4,r5,r6,r7,r8
-                                | "B4" -> r1,changeCol 1 r2,r3,r4,r5,r6,r7,r8
-                                | "B6" -> r1,changeCol 2 r2,r3,r4,r5,r6,r7,r8
-                                | "C3" -> r1,r2,changeCol 0 r3,r4,r5,r6,r7,r8
-                                | "C4" -> r1,r2,changeCol 1 r3,r4,r5,r6,r7,r8
-                                | "C5" -> r1,r2,changeCol 2 r3,r4,r5,r6,r7,r8
-                                | "D1" -> r1,r2,r3,changeCol 0 r4,r5,r6,r7,r8
-                                | "D2" -> r1,r2,r3,changeCol 1 r4,r5,r6,r7,r8
-                                | "D3" -> r1,r2,r3,changeCol 2 r4,r5,r6,r7,r8
-                                | "D5" -> r1,r2,r3,r4,changeCol 0 r5,r6,r7,r8
-                                | "D6" -> r1,r2,r3,r4,changeCol 1 r5,r6,r7,r8
-                                | "D7" -> r1,r2,r3,r4,changeCol 2 r5,r6,r7,r8
-                                | "E3" -> r1,r2,r3,r4,r5,changeCol 0 r6,r7,r8
-                                | "E4" -> r1,r2,r3,r4,r5,changeCol 1 r6,r7,r8
-                                | "E5" -> r1,r2,r3,r4,r5,changeCol 2 r6,r7,r8
-                                | "F2" -> r1,r2,r3,r4,r5,r6,changeCol 0 r7,r8
-                                | "F4" -> r1,r2,r3,r4,r5,r6,changeCol 1 r7,r8
-                                | "F6" -> r1,r2,r3,r4,r5,r6,changeCol 2 r7,r8
-                                | "G1" -> r1,r2,r3,r4,r5,r6,r7,changeCol 0 r8
-                                | "G4" -> r1,r2,r3,r4,r5,r6,r7,changeCol 1 r8
-                                | "G7" -> r1,r2,r3,r4,r5,r6,r7,changeCol 2 r8
-                                | _ -> failwith "i hate myself"
-                            Board data
-                        newBoard
-            | _ -> eliminate game player ylist mlist
-    |M -> match player with
-           | Y ->
-                match cowIN_mill position ylist with
-                | false ->
-                        let newBoard =
-                            let changeCol col (a,b,c) =
-                                match col with
-                                | 0 -> Blank,b,c
-                                | 1 -> a,Blank,c
-                                | 2 -> a,b,Blank
-                                | _ -> failwith "NOOOOOOOOooooooooooooooo it's all gone to ......... the dogs"
-                            let data =
-                                match position with
-                                | "A1" -> changeCol 0 r1,r2,r3,r4,r5,r6,r7,r8
-                                | "A4" -> changeCol 1 r1,r2,r3,r4,r5,r6,r7,r8
-                                | "A7" -> changeCol 2 r1,r2,r3,r4,r5,r6,r7,r8
-                                | "B2" -> r1,changeCol 0 r2,r3,r4,r5,r6,r7,r8
-                                | "B4" -> r1,changeCol 1 r2,r3,r4,r5,r6,r7,r8
-                                | "B6" -> r1,changeCol 2 r2,r3,r4,r5,r6,r7,r8
-                                | "C3" -> r1,r2,changeCol 0 r3,r4,r5,r6,r7,r8
-                                | "C4" -> r1,r2,changeCol 1 r3,r4,r5,r6,r7,r8
-                                | "C5" -> r1,r2,changeCol 2 r3,r4,r5,r6,r7,r8
-                                | "D1" -> r1,r2,r3,changeCol 0 r4,r5,r6,r7,r8
-                                | "D2" -> r1,r2,r3,changeCol 1 r4,r5,r6,r7,r8
-                                | "D3" -> r1,r2,r3,changeCol 2 r4,r5,r6,r7,r8
-                                | "D5" -> r1,r2,r3,r4,changeCol 0 r5,r6,r7,r8
-                                | "D6" -> r1,r2,r3,r4,changeCol 1 r5,r6,r7,r8
-                                | "D7" -> r1,r2,r3,r4,changeCol 2 r5,r6,r7,r8
-                                | "E3" -> r1,r2,r3,r4,r5,changeCol 0 r6,r7,r8
-                                | "E4" -> r1,r2,r3,r4,r5,changeCol 1 r6,r7,r8
-                                | "E5" -> r1,r2,r3,r4,r5,changeCol 2 r6,r7,r8
-                                | "F2" -> r1,r2,r3,r4,r5,r6,changeCol 0 r7,r8
-                                | "F4" -> r1,r2,r3,r4,r5,r6,changeCol 1 r7,r8
-                                | "F6" -> r1,r2,r3,r4,r5,r6,changeCol 2 r7,r8
-                                | "G1" -> r1,r2,r3,r4,r5,r6,r7,changeCol 0 r8
-                                | "G4" -> r1,r2,r3,r4,r5,r6,r7,changeCol 1 r8
-                                | "G7" -> r1,r2,r3,r4,r5,r6,r7,changeCol 2 r8
-                                | _ -> failwith "i hate myself"
-                            Board data
-                        newBoard
-                | _ -> eliminate game player ylist mlist
-            | _ -> eliminate game player ylist mlist 
+    match (playerAtPos game position, player) with
+    | Y,M -> match cowIN_mill position ylist with
+             | true -> eliminate game player ylist mlist
+             | _ -> printf "Who did M got killed?"
+                    updateBoard game Blank position
+
+    | M,Y -> match cowIN_mill position ylist with
+             | false -> updateBoard game Blank position        
+             | _ -> eliminate game player mlist mlist 
     | _ -> eliminate game player ylist mlist 
 
 let gameCheck2 game yMlist mMlist moveFrom moveTo (y_prevMove:string list) (m_prevMove: string list) player=
@@ -712,296 +711,90 @@ let printBoard (Board (r1, r2, r3,r4,r5,r6,r7,r8)) (cows:int list)=
                   printBdG
 
 let makeMove symbol (Board (r1,r2,r3,r4,r5,r6,r7,r8)) position yMlist mMlist =
-    let newBoard =
-        let changeCol col (a,b,c) =
-            match col with
-            | 0 -> symbol,b,c
-            | 1 -> a,symbol,c
-            | 2 -> a,b,symbol
-            | _ -> failwith "NOOOOOOOOooooooooooooooo it's all gone to ......... the dogs"
-        let data =
-            match position with
-            | "A1" -> changeCol 0 r1,r2,r3,r4,r5,r6,r7,r8
-            | "A4" -> changeCol 1 r1,r2,r3,r4,r5,r6,r7,r8
-            | "A7" -> changeCol 2 r1,r2,r3,r4,r5,r6,r7,r8
-            | "B2" -> r1,changeCol 0 r2,r3,r4,r5,r6,r7,r8
-            | "B4" -> r1,changeCol 1 r2,r3,r4,r5,r6,r7,r8
-            | "B6" -> r1,changeCol 2 r2,r3,r4,r5,r6,r7,r8
-            | "C3" -> r1,r2,changeCol 0 r3,r4,r5,r6,r7,r8
-            | "C4" -> r1,r2,changeCol 1 r3,r4,r5,r6,r7,r8
-            | "C5" -> r1,r2,changeCol 2 r3,r4,r5,r6,r7,r8
-            | "D1" -> r1,r2,r3,changeCol 0 r4,r5,r6,r7,r8
-            | "D2" -> r1,r2,r3,changeCol 1 r4,r5,r6,r7,r8
-            | "D3" -> r1,r2,r3,changeCol 2 r4,r5,r6,r7,r8
-            | "D5" -> r1,r2,r3,r4,changeCol 0 r5,r6,r7,r8
-            | "D6" -> r1,r2,r3,r4,changeCol 1 r5,r6,r7,r8
-            | "D7" -> r1,r2,r3,r4,changeCol 2 r5,r6,r7,r8
-            | "E3" -> r1,r2,r3,r4,r5,changeCol 0 r6,r7,r8
-            | "E4" -> r1,r2,r3,r4,r5,changeCol 1 r6,r7,r8
-            | "E5" -> r1,r2,r3,r4,r5,changeCol 2 r6,r7,r8
-            | "F2" -> r1,r2,r3,r4,r5,r6,changeCol 0 r7,r8
-            | "F4" -> r1,r2,r3,r4,r5,r6,changeCol 1 r7,r8
-            | "F6" -> r1,r2,r3,r4,r5,r6,changeCol 2 r7,r8
-            | "G1" -> r1,r2,r3,r4,r5,r6,r7,changeCol 0 r8
-            | "G4" -> r1,r2,r3,r4,r5,r6,r7,changeCol 1 r8
-            | "G7" -> r1,r2,r3,r4,r5,r6,r7,changeCol 2 r8
-            | _ -> failwith "i hate myself"
-        Board data
+    let newBoard = updateBoard (Board (r1,r2,r3,r4,r5,r6,r7,r8)) symbol position
     gameCheck newBoard yMlist mMlist
-    
+
+let checkNeighbors moveFrom moveTo =
+ 
+                        let aOne = ["A4";"B2";"D1"]
+                        let aFour = ["A1";"A7";"B4"]
+                        let aSeven = ["A4";"B6";"D7"]
+                        let bTwo = ["A1";"C3";"B4";"D2"]
+                        let bFour = ["B2";"A4";"D6";"C4"]
+                        let bSix = ["A7";"B4";"D7"]
+                        let cThree = ["B2";"C4";"D3"]
+                        let cFour = ["C3";"B4";"C5"]
+                        let cFive = ["C4";"B6";"D5"]
+                        let dOne = ["A1";"D2";"G1"]
+                        let dTwo = ["D1";"B2";"D3"]
+                        let dThree =["C3";"D2";"E3"] 
+                        let dFive = ["C5";"D6";"E5"]
+                        let dSix = ["D5";"B6";"D7";"F6"]
+                        let dSeven = ["A7";"D6";"G7"]
+                        let eThree = ["D7";"E4";"F2"]
+                        let eFour = ["F4";"E3";"E5"]
+                        let eFive = ["D5";"E4";"F6"]
+                        let fTwo = ["G1";"E3";"F4";"D2"]
+                        let fFour = ["E4";"F6";"G4";"F2"] 
+                        let fSix = ["G7";"D6";"F4";"E5"]
+                        let gOne = ["D1";"F2";"G4"]
+                        let gFour = ["F4";"G1";"G7"]
+                        let gSeven = ["F6";"D7";"G4"]
+
+                        let tst = fun p -> p = moveTo
+                        match moveFrom with
+                        | "A1" -> List.exists tst aOne
+                        | "A4" -> List.exists tst aFour
+                        | "A7" -> List.exists tst aSeven
+                        | "B2" -> List.exists tst bTwo
+                        | "B4" -> List.exists tst bFour
+                        | "B6" -> List.exists tst bSix
+                        | "C3" -> List.exists tst cThree
+                        | "C4" -> List.exists tst cFour
+                        | "C5" -> List.exists tst cFive
+                        | "D1" -> List.exists tst dOne
+                        | "D2" -> List.exists tst dTwo
+                        | "D3" -> List.exists tst dThree
+                        | "D5" -> List.exists tst dFive
+                        | "D6" -> List.exists tst dSix
+                        | "D7" -> List.exists tst dSeven
+                        | "E3" -> List.exists tst eThree
+                        | "E4" -> List.exists tst eFour
+                        | "E5" -> List.exists tst eFive
+                        | "F2" -> List.exists tst fTwo
+                        | "F4" -> List.exists tst fFour
+                        | "F6" -> List.exists tst fSix
+                        | "G1" -> List.exists tst gOne
+                        | "G4" -> List.exists tst gFour
+                        | "G7" -> List.exists tst gSeven
+                        | _ -> false
+                        
 let moveCow (Board (r1, r2, r3,r4,r5,r6,r7,r8)) play moveFrom moveTo yMlist mMlist y_prevMove m_prevMove=
     
     let currentBoard  = (Board (r1, r2, r3,r4,r5,r6,r7,r8))
-    let a1,a4,a7 = r1
-    let b2,b4,b6 = r2
-    let c3,c4,c5 = r3
-    let d1,d2,d3 = r4
-    let d5,d6,d7 = r5
-    let e3,e4,e5 = r6
-    let f2,f4,f6 = r7
-    let g1,g4,g7 = r8
-
+    let RemoveCow  =  updateBoard currentBoard Blank moveFrom
     
-
-    let ammend (Board (r1, r2, r3,r4,r5,r6,r7,r8)) pos player =  
+    let newB = updateBoard RemoveCow play moveTo
+    gameCheck2 newB yMlist mMlist moveFrom moveTo y_prevMove m_prevMove play
     
-        let a1,a4,a7 = r1
-        let b2,b4,b6 = r2
-        let c3,c4,c5 = r3
-        let d1,d2,d3 = r4
-        let d5,d6,d7 = r5
-        let e3,e4,e5 = r6
-        let f2,f4,f6 = r7
-        let g1,g4,g7 = r8
-        
-        let amn =
-            match pos with 
-            | "A1" -> (player,a4,a7),r2,r3,r4,r5,r6,r7,r8
-            | "A4" -> (a1,player,a7),r2,r3,r4,r5,r6,r7,r8
-            | "A7" -> (a1,a4,player),r2,r3,r4,r5,r6,r7,r8
-            | "B2" -> r1,(player,b4,b6),r3,r4,r5,r6,r7,r8
-            | "B4" -> r1,(b2,player,b6),r3,r4,r5,r6,r7,r8
-            | "B6" -> r1,(b2,b4,player),r3,r4,r5,r6,r7,r8
-            | "C3" -> r1,r2,(player,c4,c5),r4,r5,r6,r7,r8
-            | "C4" -> r1,r2,(c3,player,c5),r4,r5,r6,r7,r8
-            | "C5" -> r1,r2,(c3,c4,player),r4,r5,r6,r7,r8
-            | "D1" -> r1,r2,r3,(player,d2,d3),r5,r6,r7,r8
-            | "D2" -> r1,r2,r3,(d1,player,c5),r5,r6,r7,r8
-            | "D3" -> r1,r2,r3,(d1,d2,player),r5,r6,r7,r8
-            | "D5" -> r1,r2,r3,r4,(player,d6,d7),r6,r7,r8
-            | "D6" -> r1,r2,r3,r4,(d5,player,d7),r6,r7,r8
-            | "D7" -> r1,r2,r3,r4,(d5,d6,player),r6,r7,r8
-            | "E3" -> r1,r2,r3,r4,r5,(player,e4,e5),r7,r8
-            | "E4" -> r1,r2,r3,r4,r5,(e3,player,e5),r7,r8
-            | "E5" -> r1,r2,r3,r4,r5,(e3,e4,player),r7,r8
-            | "F2" -> r1,r2,r3,r4,r5,r6,(player,f4,f6),r8
-            | "F4" -> r1,r2,r3,r4,r5,r6,(f2,player,f6),r8
-            | "F6" -> r1,r2,r3,r4,r5,r6,(f2,f4,player),r8
-            | "G1" -> r1,r2,r3,r4,r5,r6,r7,(player,g4,g7)
-            | "G4" -> r1,r2,r3,r4,r5,r6,r7,(g1,player,g7)
-            | "G7" -> r1,r2,r3,r4,r5,r6,r7,(g1,g4,player)
-            | _ -> failwith "i hate myself"  
-        Board amn
-     
-
-    //Check if the position to move to is empty
-    let checkMove = 
-        match moveTo with
-        | "A1" -> a1 = Blank        
-        | "A4" -> a4 = Blank
-        | "A7" -> a7 = Blank
-        | "B2" -> b2 = Blank
-        | "B4" -> b4 = Blank
-        | "B6" -> b6 = Blank
-        | "C3" -> c3 = Blank
-        | "C4" -> c4 = Blank
-        | "C5" -> c5 = Blank
-        | "D1" -> d1 = Blank
-        | "D2" -> d2 = Blank 
-        | "D3" -> d3 = Blank 
-        | "D5" -> d5 = Blank
-        | "D6" -> d6 = Blank
-        | "D7" -> d7 = Blank
-        | "E3" -> e3 = Blank
-        | "E4" -> e4 = Blank
-        | "E5" -> e5 = Blank
-        | "F2" -> f2 = Blank
-        | "F4" -> f4 = Blank
-        | "F6" -> f6 = Blank
-        | "G1" -> g1 = Blank 
-        | "G4" -> g4 = Blank
-        | "G7" -> g7 = Blank
-        | _ -> false
-
-    let checkNeighbours = 
-
-        let aOne = ["A4";"B2";"D1"]
-        let aFour = ["A1";"A7";"B4"]
-        let aSeven = ["A4";"B6";"D7"]
-        let bTwo = ["A1";"C3";"B4";"D2"]
-        let bFour = ["B2";"A4";"D6";"C4"]
-        let bSix = ["A7";"B4";"D7"]
-        let cThree = ["B2";"C4";"D3"]
-        let cFour = ["C3";"B4";"C5"]
-        let cFive = ["C4";"B6";"D5"]
-        let dOne = ["A1";"D2";"G1"]
-        let dTwo = ["D1";"B2";"D3";"F2"]
-        let dThree =["C3";"D2";"E3"] 
-        let dFive = ["C5";"D6";"E5"]
-        let dSix = ["D5";"B6";"D7";"F6"]
-        let dSeven = ["A7";"D6";"G7"]
-        let eThree = ["D7";"E4";"F2"]
-        let eFour = ["F4";"E3";"E5"]
-        let eFive = ["D5";"E4";"F6"]
-        let fTwo = ["G1";"E3";"F4";"D2"]
-        let fFour = ["E4";"F6";"G4";"F2"] 
-        let fSix = ["G7";"D6";"F4";"E5"]
-        let gOne = ["D1";"F2";"G4"]
-        let gFour = ["F4";"G1";"G7"]
-        let gSeven = ["F6";"D7";"G4"]
-
-        let tst = fun p -> p = moveTo
-        match moveFrom with
-        | "A1" -> List.exists tst aOne
-        | "A4" -> List.exists tst aFour
-        | "A7" -> List.exists tst aSeven
-        | "B2" -> List.exists tst bTwo
-        | "B4" -> List.exists tst bFour
-        | "B6" -> List.exists tst bSix
-        | "C3" -> List.exists tst cThree
-        | "C4" -> List.exists tst cFour
-        | "C5" -> List.exists tst cFive
-        | "D1" -> List.exists tst dOne
-        | "D2" -> List.exists tst dTwo
-        | "D3" -> List.exists tst dThree
-        | "D5" -> List.exists tst dFive
-        | "D6" -> List.exists tst dSix
-        | "D7" -> List.exists tst dSeven
-        | "E3" -> List.exists tst eThree
-        | "E4" -> List.exists tst eFour
-        | "E5" -> List.exists tst eFive
-        | "F2" -> List.exists tst fTwo
-        | "F4" -> List.exists tst fFour
-        | "F6" -> List.exists tst fSix
-        | "G1" -> List.exists tst gOne
-        | "G4" -> List.exists tst gFour
-        | "G7" -> List.exists tst gSeven
-        | _ -> failwith "How did we get here" 
-    
-    let RemoveCow  =  ammend currentBoard moveFrom Blank
-    
-    match checkMove && checkNeighbours with
-    | true ->gameCheck2 (ammend RemoveCow moveTo play) yMlist mMlist moveFrom moveTo y_prevMove m_prevMove play
-    | _->  gameCheck2 currentBoard yMlist mMlist moveFrom moveTo y_prevMove m_prevMove play
-
 let flyCow (Board (r1, r2, r3,r4,r5,r6,r7,r8)) play moveFrom moveTo yMlist mMlist y_prevMove m_prevMove =
     let currentBoard  = (Board (r1, r2, r3,r4,r5,r6,r7,r8))
-    let a1,a4,a7 = r1
-    let b2,b4,b6 = r2
-    let c3,c4,c5 = r3
-    let d1,d2,d3 = r4
-    let d5,d6,d7 = r5
-    let e3,e4,e5 = r6
-    let f2,f4,f6 = r7
-    let g1,g4,g7 = r8
-
-    
-
-    let ammend (Board (r1, r2, r3,r4,r5,r6,r7,r8)) pos player =  
-    
-        let a1,a4,a7 = r1
-        let b2,b4,b6 = r2
-        let c3,c4,c5 = r3
-        let d1,d2,d3 = r4
-        let d5,d6,d7 = r5
-        let e3,e4,e5 = r6
-        let f2,f4,f6 = r7
-        let g1,g4,g7 = r8
         
-        let amn =
-            match pos with 
-            | "A1" -> (player,a4,a7),r2,r3,r4,r5,r6,r7,r8
-            | "A4" -> (a1,player,a7),r2,r3,r4,r5,r6,r7,r8
-            | "A7" -> (a1,a4,player),r2,r3,r4,r5,r6,r7,r8
-            | "B2" -> r1,(player,b4,b6),r3,r4,r5,r6,r7,r8
-            | "B4" -> r1,(b2,player,b6),r3,r4,r5,r6,r7,r8
-            | "B6" -> r1,(b2,b4,player),r3,r4,r5,r6,r7,r8
-            | "C3" -> r1,r2,(player,c4,c5),r4,r5,r6,r7,r8
-            | "C4" -> r1,r2,(c3,player,c5),r4,r5,r6,r7,r8
-            | "C5" -> r1,r2,(c3,c4,player),r4,r5,r6,r7,r8
-            | "D1" -> r1,r2,r3,(player,d2,d3),r5,r6,r7,r8
-            | "D2" -> r1,r2,r3,(d1,player,c5),r5,r6,r7,r8
-            | "D3" -> r1,r2,r3,(d1,d2,player),r5,r6,r7,r8
-            | "D5" -> r1,r2,r3,r4,(player,d6,d7),r6,r7,r8
-            | "D6" -> r1,r2,r3,r4,(d5,player,d7),r6,r7,r8
-            | "D7" -> r1,r2,r3,r4,(d5,d6,player),r6,r7,r8
-            | "E3" -> r1,r2,r3,r4,r5,(player,e4,e5),r7,r8
-            | "E4" -> r1,r2,r3,r4,r5,(e3,player,e5),r7,r8
-            | "E5" -> r1,r2,r3,r4,r5,(e3,e4,player),r7,r8
-            | "F2" -> r1,r2,r3,r4,r5,r6,(player,f4,f6),r8
-            | "F4" -> r1,r2,r3,r4,r5,r6,(f2,player,f6),r8
-            | "F6" -> r1,r2,r3,r4,r5,r6,(f2,f4,player),r8
-            | "G1" -> r1,r2,r3,r4,r5,r6,r7,(player,g4,g7)
-            | "G4" -> r1,r2,r3,r4,r5,r6,r7,(g1,player,g7)
-            | "G7" -> r1,r2,r3,r4,r5,r6,r7,(g1,g4,player)
-            | _ -> failwith "i hate myself"  
-        Board amn
-     
-
-    //Check if the position to move to is empty
-    let checkMove = 
-        match moveTo with
-        | "A1" -> a1 = Blank        
-        | "A4" -> a4 = Blank
-        | "A7" -> a7 = Blank
-        | "B2" -> b2 = Blank
-        | "B4" -> b4 = Blank
-        | "B6" -> b6 = Blank
-        | "C3" -> c3 = Blank
-        | "C4" -> c4 = Blank
-        | "C5" -> c5 = Blank
-        | "D1" -> d1 = Blank
-        | "D2" -> d2 = Blank 
-        | "D3" -> d3 = Blank 
-        | "D5" -> d5 = Blank
-        | "D6" -> d6 = Blank
-        | "D7" -> d7 = Blank
-        | "E3" -> e3 = Blank
-        | "E4" -> e4 = Blank
-        | "E5" -> e5 = Blank
-        | "F2" -> f2 = Blank
-        | "F4" -> f4 = Blank
-        | "F6" -> f6 = Blank
-        | "G1" -> g1 = Blank 
-        | "G4" -> g4 = Blank
-        | "G7" -> g7 = Blank
-        | _ -> false
-        
-    let RemoveCow  =  ammend currentBoard moveFrom Blank
-    
-    match checkMove with
-    | true ->gameCheck2 (ammend RemoveCow moveTo play) yMlist mMlist moveFrom moveTo y_prevMove m_prevMove play
-    | _->  gameCheck2 currentBoard yMlist mMlist moveFrom moveTo y_prevMove m_prevMove play
- 
+    let RemoveCow  =  updateBoard currentBoard Blank moveFrom
+    let newB = updateBoard RemoveCow play moveTo
+    gameCheck2 newB yMlist mMlist moveFrom moveTo y_prevMove m_prevMove play
+                     
 let rec run player game yMlist mMlist (cows:int list) =
     // need to find the blank cells that can be used...
     printBoard game cows
     printfn "%A's turn.  Type the number of the cell that you want to play into." player
-    let n = System.Console.ReadLine()
-    match n with
-    | "A1" | "A4" | "A7" 
-    | "B2" | "B4" | "B6" 
-    | "C3" | "C4" | "C5"
-    | "D1" | "D2" | "D3" 
-    | "D5" | "D6" | "D7" 
-    | "E3" | "E4" | "E5" 
-    | "F2" | "F4" | "F6" 
-    | "G1" | "G4" | "G7"  ->
-        match isBlank game n with
-        | true -> makeMove player game n yMlist mMlist
-        | _ -> run player game yMlist mMlist cows
-    | _ -> run player game yMlist mMlist cows
-
+    let inp = System.Console.ReadLine()
+    let n = inp.ToUpper()
+   
+    match isBlank game n && input_vallidation2 n with
+     | true -> makeMove player game n yMlist mMlist
+     | _ -> run player game yMlist mMlist cows
+    
 let rec run1 player game yMlist mMlist (cows:int list) y_prevMove m_prevMove =
     // need to find the blank cells that can be used...
     printBoard game cows
@@ -1011,174 +804,15 @@ let rec run1 player game yMlist mMlist (cows:int list) y_prevMove m_prevMove =
     printf "%A Enter position to move TO : " player
     let moveTo = Console.ReadLine()
     
-    match playerAtPos game moveFrom with
-    | Y ->
-         match player with
-         | Y -> let checkNeighbours = 
-
-                        let aOne = ["A4";"B2";"D1"]
-                        let aFour = ["A1";"A7";"B4"]
-                        let aSeven = ["A4";"B6";"D7"]
-                        let bTwo = ["A1";"C3";"B4";"D2"]
-                        let bFour = ["B2";"A4";"D6";"C4"]
-                        let bSix = ["A7";"B4";"D7"]
-                        let cThree = ["B2";"C4";"D3"]
-                        let cFour = ["C3";"B4";"C5"]
-                        let cFive = ["C4";"B6";"D5"]
-                        let dOne = ["A1";"D2";"G1"]
-                        let dTwo = ["D1";"B2";"D3"]
-                        let dThree =["C3";"D2";"E3"] 
-                        let dFive = ["C5";"D6";"E5"]
-                        let dSix = ["D5";"B6";"D7";"F6"]
-                        let dSeven = ["A7";"D6";"G7"]
-                        let eThree = ["D7";"E4";"F2"]
-                        let eFour = ["F4";"E3";"E5"]
-                        let eFive = ["D5";"E4";"F6"]
-                        let fTwo = ["G1";"E3";"F4";"D2"]
-                        let fFour = ["E4";"F6";"G4";"F2"] 
-                        let fSix = ["G7";"D6";"F4";"E5"]
-                        let gOne = ["D1";"F2";"G4"]
-                        let gFour = ["F4";"G1";"G7"]
-                        let gSeven = ["F6";"D7";"G4"]
-
-                        let tst = fun p -> p = moveTo
-                        match moveFrom with
-                        | "A1" -> List.exists tst aOne
-                        | "A4" -> List.exists tst aFour
-                        | "A7" -> List.exists tst aSeven
-                        | "B2" -> List.exists tst bTwo
-                        | "B4" -> List.exists tst bFour
-                        | "B6" -> List.exists tst bSix
-                        | "C3" -> List.exists tst cThree
-                        | "C4" -> List.exists tst cFour
-                        | "C5" -> List.exists tst cFive
-                        | "D1" -> List.exists tst dOne
-                        | "D2" -> List.exists tst dTwo
-                        | "D3" -> List.exists tst dThree
-                        | "D5" -> List.exists tst dFive
-                        | "D6" -> List.exists tst dSix
-                        | "D7" -> List.exists tst dSeven
-                        | "E3" -> List.exists tst eThree
-                        | "E4" -> List.exists tst eFour
-                        | "E5" -> List.exists tst eFive
-                        | "F2" -> List.exists tst fTwo
-                        | "F4" -> List.exists tst fFour
-                        | "F6" -> List.exists tst fSix
-                        | "G1" -> List.exists tst gOne
-                        | "G4" -> List.exists tst gFour
-                        | "G7" -> List.exists tst gSeven
-                        | _ -> false 
-                match checkNeighbours with
-                | true ->
-                    match moveFrom with
-                    | "A1" | "A4" | "A7" 
-                    | "B2" | "B4" | "B6" 
-                    | "C3" | "C4" | "C5"
-                    | "D1" | "D2" | "D3" 
-                    | "D5" | "D6" | "D7" 
-                    | "E3" | "E4" | "E5" 
-                    | "F2" | "F4" | "F6" 
-                    | "G1" | "G4" | "G7"  ->
-                        match moveTo with
-                        | "A1" | "A4" | "A7" 
-                        | "B2" | "B4" | "B6" 
-                        | "C3" | "C4" | "C5"
-                        | "D1" | "D2" | "D3" 
-                        | "D5" | "D6" | "D7" 
-                        | "E3" | "E4" | "E5" 
-                        | "F2" | "F4" | "F6" 
-                        | "G1" | "G4" | "G7"  ->
-                            match isBlank game moveTo with
-                            | true -> (moveCow game player moveFrom moveTo yMlist mMlist y_prevMove m_prevMove,moveFrom,moveTo)
-                            | _ -> run1 player game yMlist mMlist cows y_prevMove m_prevMove
-                        | _ -> run1 player game yMlist mMlist cows y_prevMove m_prevMove
-                    | _ -> run1 player game yMlist mMlist cows y_prevMove m_prevMove
-                | _ ->run1 player game yMlist mMlist cows y_prevMove m_prevMove    
-         | _ ->run1 player game yMlist mMlist cows y_prevMove m_prevMove
-    | M ->
-         match player with
-         | M -> let checkNeighbours = 
-
-                        let aOne = ["A4";"B2";"D1"]
-                        let aFour = ["A1";"A7";"B4"]
-                        let aSeven = ["A4";"B6";"D7"]
-                        let bTwo = ["A1";"C3";"B4";"D2"]
-                        let bFour = ["B2";"A4";"D6";"C4"]
-                        let bSix = ["A7";"B4";"D7"]
-                        let cThree = ["B2";"C4";"D3"]
-                        let cFour = ["C3";"B4";"C5"]
-                        let cFive = ["C4";"B6";"D5"]
-                        let dOne = ["A1";"D2";"G1"]
-                        let dTwo = ["D1";"B2";"D3"]
-                        let dThree =["C3";"D2";"E3"] 
-                        let dFive = ["C5";"D6";"E5"]
-                        let dSix = ["D5";"B6";"D7";"F6"]
-                        let dSeven = ["A7";"D6";"G7"]
-                        let eThree = ["D7";"E4";"F2"]
-                        let eFour = ["F4";"E3";"E5"]
-                        let eFive = ["D5";"E4";"F6"]
-                        let fTwo = ["G1";"E3";"F4";"D2"]
-                        let fFour = ["E4";"F6";"G4";"F2"] 
-                        let fSix = ["G7";"D6";"F4";"E5"]
-                        let gOne = ["D1";"F2";"G4"]
-                        let gFour = ["F4";"G1";"G7"]
-                        let gSeven = ["F6";"D7";"G4"]
-
-                        let tst = fun p -> p = moveTo
-                        match moveFrom with
-                        | "A1" -> List.exists tst aOne
-                        | "A4" -> List.exists tst aFour
-                        | "A7" -> List.exists tst aSeven
-                        | "B2" -> List.exists tst bTwo
-                        | "B4" -> List.exists tst bFour
-                        | "B6" -> List.exists tst bSix
-                        | "C3" -> List.exists tst cThree
-                        | "C4" -> List.exists tst cFour
-                        | "C5" -> List.exists tst cFive
-                        | "D1" -> List.exists tst dOne
-                        | "D2" -> List.exists tst dTwo
-                        | "D3" -> List.exists tst dThree
-                        | "D5" -> List.exists tst dFive
-                        | "D6" -> List.exists tst dSix
-                        | "D7" -> List.exists tst dSeven
-                        | "E3" -> List.exists tst eThree
-                        | "E4" -> List.exists tst eFour
-                        | "E5" -> List.exists tst eFive
-                        | "F2" -> List.exists tst fTwo
-                        | "F4" -> List.exists tst fFour
-                        | "F6" -> List.exists tst fSix
-                        | "G1" -> List.exists tst gOne
-                        | "G4" -> List.exists tst gFour
-                        | "G7" -> List.exists tst gSeven
-                        | _ -> false 
-                match checkNeighbours with
-                | true ->
-                    match moveFrom with
-                    | "A1" | "A4" | "A7" 
-                    | "B2" | "B4" | "B6" 
-                    | "C3" | "C4" | "C5"
-                    | "D1" | "D2" | "D3" 
-                    | "D5" | "D6" | "D7" 
-                    | "E3" | "E4" | "E5" 
-                    | "F2" | "F4" | "F6" 
-                    | "G1" | "G4" | "G7"  ->
-                        match moveTo with
-                        | "A1" | "A4" | "A7" 
-                        | "B2" | "B4" | "B6" 
-                        | "C3" | "C4" | "C5"
-                        | "D1" | "D2" | "D3" 
-                        | "D5" | "D6" | "D7" 
-                        | "E3" | "E4" | "E5" 
-                        | "F2" | "F4" | "F6" 
-                        | "G1" | "G4" | "G7"  ->
-                            match isBlank game moveTo with
-                            | true -> (moveCow game player moveFrom moveTo yMlist mMlist y_prevMove m_prevMove,moveFrom,moveTo)
-                            | _ -> run1 player game yMlist mMlist cows y_prevMove m_prevMove
-                        | _ -> run1 player game yMlist mMlist cows y_prevMove m_prevMove
-                    | _ -> run1 player game yMlist mMlist cows y_prevMove m_prevMove
-                | _ ->run1 player game yMlist mMlist cows y_prevMove m_prevMove     
-         | _ ->run1 player game yMlist mMlist cows y_prevMove m_prevMove
-    | _ -> run1 player game yMlist mMlist cows y_prevMove m_prevMove
+    match (playerAtPos game moveFrom,player) with
+    | Y,Y -> match (input_validation moveFrom moveTo) && (checkNeighbors moveFrom moveTo) && (isBlank game moveTo) with
+             | true -> (moveCow game player moveFrom moveTo yMlist mMlist y_prevMove m_prevMove,moveFrom,moveTo)
+             | _ -> run1 player game yMlist mMlist cows y_prevMove m_prevMove
+    
+    | M,M -> match (input_validation moveFrom moveTo) && (checkNeighbors moveFrom moveTo) && (isBlank game moveTo) with
+             | true -> (moveCow game player moveFrom moveTo yMlist mMlist y_prevMove m_prevMove,moveFrom,moveTo)
+             | _ -> run1 player game yMlist mMlist cows y_prevMove m_prevMove
+    | _ -> run1 player game yMlist mMlist cows y_prevMove m_prevMove     
       
 let rec run2 player game yMlist mMlist (cows:int list) y_prevMove m_prevMove =
     // need to find the blank cells that can be used...
@@ -1189,59 +823,14 @@ let rec run2 player game yMlist mMlist (cows:int list) y_prevMove m_prevMove =
     printf "%A Enter position to move TO : " player
     let moveTo = Console.ReadLine()
     
-    match playerAtPos game moveFrom with
-    | Y ->  match player with
-            | Y ->
-                match moveFrom with
-                 | "A1" | "A4" | "A7" 
-                 | "B2" | "B4" | "B6" 
-                 | "C3" | "C4" | "C5"
-                 | "D1" | "D2" | "D3" 
-                 | "D5" | "D6" | "D7" 
-                 | "E3" | "E4" | "E5" 
-                 | "F2" | "F4" | "F6" 
-                 | "G1" | "G4" | "G7"  ->
-                    match moveTo with
-                    | "A1" | "A4" | "A7" 
-                    | "B2" | "B4" | "B6" 
-                    | "C3" | "C4" | "C5"
-                    | "D1" | "D2" | "D3" 
-                    | "D5" | "D6" | "D7" 
-                    | "E3" | "E4" | "E5" 
-                    | "F2" | "F4" | "F6" 
-                    | "G1" | "G4" | "G7"  ->
-                       match isBlank game moveTo with
-                       | true -> (flyCow game player moveFrom moveTo yMlist mMlist y_prevMove m_prevMove, moveFrom,moveTo)
-                       | _ -> run2 player game yMlist mMlist cows y_prevMove m_prevMove 
-                    | _ -> run2 player game yMlist mMlist cows y_prevMove m_prevMove
-                 | _ -> run2 player game yMlist mMlist cows y_prevMove m_prevMove    
-            | _ -> run2 player game yMlist mMlist cows y_prevMove m_prevMove
-    | M ->  match player with
-            | M ->
-                match moveFrom with
-                 | "A1" | "A4" | "A7" 
-                 | "B2" | "B4" | "B6" 
-                 | "C3" | "C4" | "C5"
-                 | "D1" | "D2" | "D3" 
-                 | "D5" | "D6" | "D7" 
-                 | "E3" | "E4" | "E5" 
-                 | "F2" | "F4" | "F6" 
-                 | "G1" | "G4" | "G7"  ->
-                    match moveTo with
-                    | "A1" | "A4" | "A7" 
-                    | "B2" | "B4" | "B6" 
-                    | "C3" | "C4" | "C5"
-                    | "D1" | "D2" | "D3" 
-                    | "D5" | "D6" | "D7" 
-                    | "E3" | "E4" | "E5" 
-                    | "F2" | "F4" | "F6" 
-                    | "G1" | "G4" | "G7"  ->
-                       match isBlank game moveTo with
-                       | true -> (flyCow game player moveFrom moveTo yMlist mMlist y_prevMove m_prevMove,moveFrom,moveTo)
-                       | _ -> run2 player game yMlist mMlist cows y_prevMove m_prevMove 
-                    | _ -> run2 player game yMlist mMlist cows y_prevMove m_prevMove 
-                 | _ -> run2 player game yMlist mMlist cows y_prevMove m_prevMove     
-            | _ -> run2 player game yMlist mMlist cows y_prevMove m_prevMove
+    match (playerAtPos game moveFrom,player) with
+    | Y,Y -> match (input_validation moveFrom moveTo) && (isBlank game moveTo) with
+             | true -> (flyCow game player moveFrom moveTo yMlist mMlist y_prevMove m_prevMove, moveFrom,moveTo)
+             | _ -> run2 player game yMlist mMlist cows y_prevMove m_prevMove 
+             
+    | M,M -> match (input_validation moveFrom moveTo) && (isBlank game moveTo) with
+             | true -> (flyCow game player moveFrom moveTo yMlist mMlist y_prevMove m_prevMove,moveFrom,moveTo)
+             | _ -> run2 player game yMlist mMlist cows y_prevMove m_prevMove 
     | _ -> run2 player game yMlist mMlist cows y_prevMove m_prevMove
 
 let rec runGame currentPlayer game i yMlist m_Mill_List (cows:int list) y_prevMove m_prevMove =
