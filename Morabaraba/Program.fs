@@ -721,7 +721,7 @@ let myprintf x =
              Console.ForegroundColor<-ConsoleColor.Cyan
              printf"______________"
     | 'M' -> Console.ForegroundColor<-ConsoleColor.Red
-             printf " 'X'"
+             printf " 'M'"
              Console.ForegroundColor<-ConsoleColor.Cyan
              printf"______________"
     | _ -> printf" ' '______________"
@@ -733,7 +733,7 @@ let myprintf2 x =
              Console.ForegroundColor<-ConsoleColor.Cyan
              
     | 'M' -> Console.ForegroundColor<-ConsoleColor.Red
-             printfn "'X'"
+             printfn "'M'"
              Console.ForegroundColor<-ConsoleColor.Cyan
             
     | _ -> printfn "' '"
@@ -840,7 +840,11 @@ let printBoard (Board (r1, r2, r3,r4,r5,r6,r7,r8)) (cows:int list)=
                      myprintf4 (tc b4)
                      myprintf5 (tc b6)
                      printfn "   |" 
-                     printfn "\t\t\t\t |     |\           |          /|    | \t\t Y \t\t\t\t M"
+                     printf "\t\t\t\t |     |\           |          /|    | \t\t "
+                     myprintf5 'Y'
+                     printf"\t\t\t"
+                     myprintf5 'M'
+                     printfn ""
                      printfn "\t\t\t\t |     | \          |         / |    |"
                      printfn "\t\t\t\t |     |  \         |        /  |    | \t\t Cows: %d \t\t Cows: %d" cows.[0] cows.[1]
       let printBdC = printf "\t\t\tC\t |     |   "
