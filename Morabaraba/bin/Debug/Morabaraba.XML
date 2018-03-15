@@ -2,5 +2,55 @@
 <doc>
 <assembly><name>Morabaraba</name></assembly>
 <members>
+<member name="M:Program.mill_reset``1(Microsoft.FSharp.Collections.FSharpList{``0})">
+ <summary>
+ < Reseting values
+ </summary>
+ <param name="yMlist"></param>
+</member>
+<member name="M:Program.myprintf(System.Char)">
+ <summary>
+ <The following customized myprintfs functions are specially made for some color printing, to give Y and M player different colors 
+ </summary>
+ <param name="x"> Player {M,Y} </param>
+</member>
+<member name="M:Program.gameCheck(Program.GameBoard,Microsoft.FSharp.Collections.FSharpList{System.Int32},Microsoft.FSharp.Collections.FSharpList{System.Int32})">
+ <summary>
+ < Game Check is where relevant messages are broadcasted to the entire game, messages are MILL or ONGOING
+ gameCheck is only applied to placing as few a mill is not conditional
+ gameCheck2 is applied to moving and flying because mill is recognized if and only if the previous move did not result in breaking that mill which is supposely being formed
+ </summary>
+ <param name="game"></param>
+ <param name="yMlist"></param>
+ <param name="mMlist"></param>
+</member>
+<member name="M:Program.cowIN_mill(System.String,Microsoft.FSharp.Collections.FSharpList{System.Int32})">
+ <summary>
+ <Function to check whether the cow to be killed was not alread in a mill
+ </summary>
+ <param name="pos"> Position of victim cow</param>
+ <param name="list">Victim's list to see if was in a mill</param>
+</member>
+<member name="M:Program.Broken_yMill(System.String,Microsoft.FSharp.Collections.FSharpList{System.Int32})">
+ <summary>
+ < The following 2 functions returns a list and updating it as a move/fly had been made from a mill formation
+ </summary>
+ <param name="position"> Game board</param>
+ <param name="y_Mlist"> List with states to be updated</param>
+</member>
+<member name="M:Program.mill_Y_Update(Program.GameBoard,Microsoft.FSharp.Collections.FSharpList{System.Int32})">
+ <summary>
+ < following 2 functions are list returning function, that when given a list, calls other function to update the states should it be required
+ </summary>
+ <param name="game"> Game board</param>
+ <param name="yMlist"> List with states to be updated</param>
+</member>
+<member name="M:Program.mill_Y_Check(Program.GameBoard,Microsoft.FSharp.Collections.FSharpList{System.Int32})">
+ <summary>
+ < Checking Mills formed by Y and M player respectively, function returns true if any new mill was formed
+ </summary>
+ <param name="game"> The game's current board to search mills from</param>
+ <param name="yMlist"> The list that contains states, which is a way of keeping track of previous mills, list is used to determine whether a mill was previous encountered </param>
+</member>
 </members>
 </doc>

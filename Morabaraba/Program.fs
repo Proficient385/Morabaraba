@@ -90,70 +90,13 @@ let updateStatusOrNot (yMlist:'int list) index =
      | 0 -> updateList yMlist index
      | _ -> yMlist
 
-let mill_Y_Update game (yMlist:'int list) =
-    let (Board (r1,r2,r3,r4,r5,r6,r7,r8)) = game
-    
-    let a1 = match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | (Y,Y,Y),_,_,_,_,_,_,_ -> updateStatusOrNot yMlist 0 
-             | _ -> yMlist
-    let a2 = match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,(Y,Y,Y),_,_,_,_,_,_ -> updateStatusOrNot a1 1     // r2 Y mill ~B
-             | _-> a1
-    let a3 = match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,_,(Y,Y,Y),_,_,_,_,_ -> updateStatusOrNot a2 2      // r3 Y mill ~C
-             | _-> a2
-    let a4 = match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,_,_,(Y,Y,Y),_,_,_,_ -> updateStatusOrNot a3 3      // r4 Y mill ~D1 ~Middle
-             | _-> a3
-    let a5 = match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,_,_,_,(Y,Y,Y),_,_,_ -> updateStatusOrNot a4 4      // r5 Y mill ~D2 ~Middle
-             | _-> a4
-    let a6 = match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,_,_,_,_,(Y,Y,Y),_,_ -> updateStatusOrNot a5 5     // r6 Y mill ~E
-             | _-> a5
-    let a7 = match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,_,_,_,_,_,(Y,Y,Y),_ -> updateStatusOrNot a6 6     // r7 Y mill ~F
-             | _-> a6
-    let a8 = match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,_,_,_,_,_,_,(Y,Y,Y) -> updateStatusOrNot a7 7  // r8 Y mill ~G
-             | _-> a7
-    let a9 = match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | (Y,_,_),(Y,_,_),(Y,_,_),_,_,_,_,_ -> updateStatusOrNot a8 8
-             | _ -> a8
-    let a10= match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | (_,Y,_),(_,Y,_),(_,Y,_),_,_,_,_,_ -> updateStatusOrNot a9 9     // A4-B4-C4 Y mill ~Middle
-             | _-> a9
-    let a11= match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | (_,_,Y),(_,_,Y),(_,_,Y),_,_,_,_,_ -> updateStatusOrNot a10 10  // A7-B6-C5 Y mill
-             | _-> a10
-    let a12= match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | (Y,_,_),_,_,(Y,_,_),_,_,_,(Y,_,_) -> updateStatusOrNot a11 11     // A1-D1-G1 Y mill ~leftmost vertical
-             | _-> a11
-    let a13= match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,(Y,_,_),_,(_,Y,_),_,_,(Y,_,_),_ -> updateStatusOrNot a12 12     // B2-D2-F2 Y mill
-             | _-> a12
-    let a14= match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,_,(Y,_,_),(_,_,Y),_,(Y,_,_),_,_ -> updateStatusOrNot a13 13     // C3-D3-E3 Y mill
-             | _-> a13
-    let a15= match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,_,_,_,_,(Y,_,_),(Y,_,_),(Y,_,_) -> updateStatusOrNot a14 14   // G1-F2-E3 Y mill
-             | _-> a14
-    let a16= match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,_,_,_,_,(_,Y,_),(_,Y,_),(_,Y,_) -> updateStatusOrNot a15 15     // G4-F4-E4 Y mill ~Middle
-             | _-> a15
-    let a17= match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,_,_,_,_,(_,_,Y),(_,_,Y),(_,_,Y) -> updateStatusOrNot a16 16    // G7-F6-E5 Y mill
-             | _-> a16
-    let a18= match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | (_,_,Y),_,_,_,(_,_,Y),_,_,(_,_,Y) -> updateStatusOrNot a17 17    // A7-D7-G7 Y mill ~rightmost vertical
-             | _-> a17
-    let a19= match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,(_,_,Y),_,_,(_,Y,_),_,(_,_,Y),_ -> updateStatusOrNot a18 18    // B6-D6-F6 Y mill
-             | _-> a18
-    let a20= match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,_,(_,_,Y),_,(Y,_,_),(_,_,Y),_,_ -> updateStatusOrNot a19 19  // C5-D5-E5 Y mill  
-             | _-> a19 
-    a20
+
+
+/// <summary>
+/// < Checking Mills formed by Y and M player respectively, function returns true if any new mill was formed
+/// </summary>
+/// <param name="game"> The game's current board to search mills from</param>
+/// <param name="yMlist"> The list that contains states, which is a way of keeping track of previous mills, list is used to determine whether a mill was previous encountered </param>
 
 let mill_Y_Check game (yMlist:'int list) =
     let (Board (r1,r2,r3,r4,r5,r6,r7,r8)) = game
@@ -236,71 +179,6 @@ let mill_Y_Check3 game (yMlist:'int list) =
     match y1 = 1 || y2 = 1 || y3 = 1 || y4 = 1 || y5 = 1 with
     | true -> true
     | _ -> false
-
-let mill_M_Update game (m_Mlist:'int list) =
-    let (Board (r1,r2,r3,r4,r5,r6,r7,r8)) = game
-    
-    let a1 = match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | (M,M,M),_,_,_,_,_,_,_ -> updateStatusOrNot m_Mlist 0 
-             | _ -> m_Mlist
-    let a2 = match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,(M,M,M),_,_,_,_,_,_ -> updateStatusOrNot a1 1     // r2 M mill ~B
-             | _-> a1
-    let a3 = match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,_,(M,M,M),_,_,_,_,_ -> updateStatusOrNot a2 2      // r3 M mill ~C
-             | _-> a2
-    let a4 = match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,_,_,(M,M,M),_,_,_,_ -> updateStatusOrNot a3 3      // r4 M mill ~D1 ~Middle
-             | _-> a3
-    let a5 = match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,_,_,_,(M,M,M),_,_,_ -> updateStatusOrNot a4 4      // r5 M mill ~D2 ~Middle
-             | _-> a4
-    let a6 = match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,_,_,_,_,(M,M,M),_,_ -> updateStatusOrNot a5 5     // r6 M mill ~E
-             | _-> a5
-    let a7 = match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,_,_,_,_,_,(M,M,M),_ -> updateStatusOrNot a6 6     // r7 M mill ~F
-             | _-> a6
-    let a8 = match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,_,_,_,_,_,_,(M,M,M) -> updateStatusOrNot a7 7  // r8 M mill ~G
-             | _-> a7
-    let a9 = match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | (M,_,_),(M,_,_),(M,_,_),_,_,_,_,_ -> updateStatusOrNot a8 8
-             | _ -> a8
-    let a10= match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | (_,M,_),(_,M,_),(_,M,_),_,_,_,_,_ -> updateStatusOrNot a9 9     // A4-B4-C4 M mill ~Middle
-             | _-> a9
-    let a11= match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | (_,_,M),(_,_,M),(_,_,M),_,_,_,_,_ -> updateStatusOrNot a10 10  // A7-B6-C5 M mill
-             | _-> a10
-    let a12= match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | (M,_,_),_,_,(M,_,_),_,_,_,(M,_,_) -> updateStatusOrNot a11 11     // A1-D1-G1 M mill ~leftmost vertical
-             | _-> a11
-    let a13= match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,(M,_,_),_,(_,M,_),_,_,(M,_,_),_ -> updateStatusOrNot a12 12     // B2-D2-F2 M mill
-             | _-> a12
-    let a14= match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,_,(M,_,_),(_,_,M),_,(M,_,_),_,_ -> updateStatusOrNot a13 13     // C3-D3-E3 M mill
-             | _-> a13
-    let a15= match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,_,_,_,_,(M,_,_),(M,_,_),(M,_,_) -> updateStatusOrNot a14 14   // G1-F2-E3 M mill
-             | _-> a14
-    let a16= match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,_,_,_,_,(_,M,_),(_,M,_),(_,M,_) -> updateStatusOrNot a15 15     // G4-F4-E4 M mill ~Middle
-             | _-> a15
-    let a17= match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,_,_,_,_,(_,_,M),(_,_,M),(_,_,M) -> updateStatusOrNot a16 16    // G7-F6-E5 M mill
-             | _-> a16
-    let a18= match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | (_,_,M),_,_,_,(_,_,M),_,_,(_,_,M) -> updateStatusOrNot a17 17    // A7-D7-G7 M mill ~rightmost vertical
-             | _-> a17
-    let a19= match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,(_,_,M),_,_,(_,M,_),_,(_,_,M),_ -> updateStatusOrNot a18 18    // B6-D6-F6 M mill
-             | _-> a18
-    let a20= match r1,r2,r3,r4,r5,r6,r7,r8 with
-             | _,_,(_,_,M),_,(M,_,_),(_,_,M),_,_ -> updateStatusOrNot a19 19  // C5-D5-E5 M mill  
-             | _-> a19 
-    a20
 
 let mill_M_Check game (m_Mlist:'int list) =
     let (Board (r1,r2,r3,r4,r5,r6,r7,r8)) = game
@@ -400,6 +278,148 @@ let updateMill_status2 (list:'int list) idx1 idx2 =
                b
      | _ -> list
 
+/// <summary>
+/// < following 2 functions are list returning function, that when given a list, calls other function to update the states should it be required
+/// </summary>
+/// <param name="game"> Game board</param>
+/// <param name="yMlist"> List with states to be updated</param>
+
+let mill_Y_Update game (yMlist:'int list) =
+    let (Board (r1,r2,r3,r4,r5,r6,r7,r8)) = game
+    
+    let a1 = match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | (Y,Y,Y),_,_,_,_,_,_,_ -> updateStatusOrNot yMlist 0 
+             | _ -> yMlist
+    let a2 = match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,(Y,Y,Y),_,_,_,_,_,_ -> updateStatusOrNot a1 1     // r2 Y mill ~B
+             | _-> a1
+    let a3 = match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,_,(Y,Y,Y),_,_,_,_,_ -> updateStatusOrNot a2 2      // r3 Y mill ~C
+             | _-> a2
+    let a4 = match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,_,_,(Y,Y,Y),_,_,_,_ -> updateStatusOrNot a3 3      // r4 Y mill ~D1 ~Middle
+             | _-> a3
+    let a5 = match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,_,_,_,(Y,Y,Y),_,_,_ -> updateStatusOrNot a4 4      // r5 Y mill ~D2 ~Middle
+             | _-> a4
+    let a6 = match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,_,_,_,_,(Y,Y,Y),_,_ -> updateStatusOrNot a5 5     // r6 Y mill ~E
+             | _-> a5
+    let a7 = match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,_,_,_,_,_,(Y,Y,Y),_ -> updateStatusOrNot a6 6     // r7 Y mill ~F
+             | _-> a6
+    let a8 = match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,_,_,_,_,_,_,(Y,Y,Y) -> updateStatusOrNot a7 7  // r8 Y mill ~G
+             | _-> a7
+    let a9 = match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | (Y,_,_),(Y,_,_),(Y,_,_),_,_,_,_,_ -> updateStatusOrNot a8 8
+             | _ -> a8
+    let a10= match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | (_,Y,_),(_,Y,_),(_,Y,_),_,_,_,_,_ -> updateStatusOrNot a9 9     // A4-B4-C4 Y mill ~Middle
+             | _-> a9
+    let a11= match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | (_,_,Y),(_,_,Y),(_,_,Y),_,_,_,_,_ -> updateStatusOrNot a10 10  // A7-B6-C5 Y mill
+             | _-> a10
+    let a12= match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | (Y,_,_),_,_,(Y,_,_),_,_,_,(Y,_,_) -> updateStatusOrNot a11 11     // A1-D1-G1 Y mill ~leftmost vertical
+             | _-> a11
+    let a13= match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,(Y,_,_),_,(_,Y,_),_,_,(Y,_,_),_ -> updateStatusOrNot a12 12     // B2-D2-F2 Y mill
+             | _-> a12
+    let a14= match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,_,(Y,_,_),(_,_,Y),_,(Y,_,_),_,_ -> updateStatusOrNot a13 13     // C3-D3-E3 Y mill
+             | _-> a13
+    let a15= match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,_,_,_,_,(Y,_,_),(Y,_,_),(Y,_,_) -> updateStatusOrNot a14 14   // G1-F2-E3 Y mill
+             | _-> a14
+    let a16= match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,_,_,_,_,(_,Y,_),(_,Y,_),(_,Y,_) -> updateStatusOrNot a15 15     // G4-F4-E4 Y mill ~Middle
+             | _-> a15
+    let a17= match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,_,_,_,_,(_,_,Y),(_,_,Y),(_,_,Y) -> updateStatusOrNot a16 16    // G7-F6-E5 Y mill
+             | _-> a16
+    let a18= match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | (_,_,Y),_,_,_,(_,_,Y),_,_,(_,_,Y) -> updateStatusOrNot a17 17    // A7-D7-G7 Y mill ~rightmost vertical
+             | _-> a17
+    let a19= match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,(_,_,Y),_,_,(_,Y,_),_,(_,_,Y),_ -> updateStatusOrNot a18 18    // B6-D6-F6 Y mill
+             | _-> a18
+    let a20= match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,_,(_,_,Y),_,(Y,_,_),(_,_,Y),_,_ -> updateStatusOrNot a19 19  // C5-D5-E5 Y mill  
+             | _-> a19 
+    a20
+
+let mill_M_Update game (m_Mlist:'int list) =
+    let (Board (r1,r2,r3,r4,r5,r6,r7,r8)) = game
+    
+    let a1 = match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | (M,M,M),_,_,_,_,_,_,_ -> updateStatusOrNot m_Mlist 0 
+             | _ -> m_Mlist
+    let a2 = match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,(M,M,M),_,_,_,_,_,_ -> updateStatusOrNot a1 1     // r2 M mill ~B
+             | _-> a1
+    let a3 = match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,_,(M,M,M),_,_,_,_,_ -> updateStatusOrNot a2 2      // r3 M mill ~C
+             | _-> a2
+    let a4 = match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,_,_,(M,M,M),_,_,_,_ -> updateStatusOrNot a3 3      // r4 M mill ~D1 ~Middle
+             | _-> a3
+    let a5 = match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,_,_,_,(M,M,M),_,_,_ -> updateStatusOrNot a4 4      // r5 M mill ~D2 ~Middle
+             | _-> a4
+    let a6 = match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,_,_,_,_,(M,M,M),_,_ -> updateStatusOrNot a5 5     // r6 M mill ~E
+             | _-> a5
+    let a7 = match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,_,_,_,_,_,(M,M,M),_ -> updateStatusOrNot a6 6     // r7 M mill ~F
+             | _-> a6
+    let a8 = match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,_,_,_,_,_,_,(M,M,M) -> updateStatusOrNot a7 7  // r8 M mill ~G
+             | _-> a7
+    let a9 = match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | (M,_,_),(M,_,_),(M,_,_),_,_,_,_,_ -> updateStatusOrNot a8 8
+             | _ -> a8
+    let a10= match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | (_,M,_),(_,M,_),(_,M,_),_,_,_,_,_ -> updateStatusOrNot a9 9     // A4-B4-C4 M mill ~Middle
+             | _-> a9
+    let a11= match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | (_,_,M),(_,_,M),(_,_,M),_,_,_,_,_ -> updateStatusOrNot a10 10  // A7-B6-C5 M mill
+             | _-> a10
+    let a12= match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | (M,_,_),_,_,(M,_,_),_,_,_,(M,_,_) -> updateStatusOrNot a11 11     // A1-D1-G1 M mill ~leftmost vertical
+             | _-> a11
+    let a13= match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,(M,_,_),_,(_,M,_),_,_,(M,_,_),_ -> updateStatusOrNot a12 12     // B2-D2-F2 M mill
+             | _-> a12
+    let a14= match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,_,(M,_,_),(_,_,M),_,(M,_,_),_,_ -> updateStatusOrNot a13 13     // C3-D3-E3 M mill
+             | _-> a13
+    let a15= match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,_,_,_,_,(M,_,_),(M,_,_),(M,_,_) -> updateStatusOrNot a14 14   // G1-F2-E3 M mill
+             | _-> a14
+    let a16= match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,_,_,_,_,(_,M,_),(_,M,_),(_,M,_) -> updateStatusOrNot a15 15     // G4-F4-E4 M mill ~Middle
+             | _-> a15
+    let a17= match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,_,_,_,_,(_,_,M),(_,_,M),(_,_,M) -> updateStatusOrNot a16 16    // G7-F6-E5 M mill
+             | _-> a16
+    let a18= match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | (_,_,M),_,_,_,(_,_,M),_,_,(_,_,M) -> updateStatusOrNot a17 17    // A7-D7-G7 M mill ~rightmost vertical
+             | _-> a17
+    let a19= match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,(_,_,M),_,_,(_,M,_),_,(_,_,M),_ -> updateStatusOrNot a18 18    // B6-D6-F6 M mill
+             | _-> a18
+    let a20= match r1,r2,r3,r4,r5,r6,r7,r8 with
+             | _,_,(_,_,M),_,(M,_,_),(_,_,M),_,_ -> updateStatusOrNot a19 19  // C5-D5-E5 M mill  
+             | _-> a19 
+    a20
+    
+/// <summary>
+/// < The following 2 functions returns a list and updating it as a move/fly had been made from a mill formation
+/// </summary>
+/// <param name="position"> Game board</param>
+/// <param name="y_Mlist"> List with states to be updated</param>
+
 let Broken_yMill position y_Mlist =
     let y = match position with
             | "A1" -> updateMill_status3 y_Mlist 0 8 11
@@ -459,29 +479,35 @@ let Broken_mMill position m_Mlist =
         | _ -> m_Mlist
     m
 
+// Function to reduce opponent cows
 let kill (list: int list) player =
     match player with 
     | Y -> list.Head::(list.[1]-1)::[]
     | M -> (list.Head-1)::(list.[1])::[]
     | _ -> list
 
-let updateMoves (list:string list) moveF moveT =
-    list = [moveF;moveT]
-
+// function used to check whether a mill is present
 let check_positions1 idx1 idx2 idx3 (list:int list) =
     match list.[idx1] = 1 || list.[idx2] = 1 || list.[idx3] = 1 || list.[idx1] = 2 || list.[idx2] = 2 || list.[idx3] = 2 with
     | true -> 1
     | _ -> 0
 
+ // function used to check whether a mill is present
 let check_positions2 idx1 idx2 (list:int list) =
     match list.[idx1] = 1 || list.[idx2] = 1 || list.[idx1] = 2 || list.[idx2] = 2 with
     | true -> 1
     | _ -> 0
 
+/// <summary>
+/// <Function to check whether the cow to be killed was not alread in a mill
+/// </summary>
+/// <param name="pos"> Position of victim cow</param>
+/// <param name="list">Victim's list to see if was in a mill</param>
+
 let cowIN_mill pos (list:int list) =
     let status = 
         match pos with
-        | "A1" -> check_positions1 0 8 3 list
+        | "A1" -> check_positions1 0 8 11 list
         | "A4" -> check_positions2 0 9 list
         | "A7" -> check_positions1 0 10 17 list
         | "B2" -> check_positions1 1 8 12 list
@@ -511,6 +537,7 @@ let cowIN_mill pos (list:int list) =
     | 1 -> true
     | _ -> false
 
+// Accept correct input for placing, moving and flying
 let input_validation moveFrom moveTo =
    
     match moveFrom with
@@ -546,6 +573,7 @@ let input_vallidation2 (n:string) =
     | "G1" | "G4" | "G7" -> true
     | _ -> false
 
+// Draw a new board with updated cell
 let updateBoard (Board (r1,r2,r3,r4,r5,r6,r7,r8)) symbol position =
     let newBoard =
         let changeCol col (a,b,c) =
@@ -584,6 +612,7 @@ let updateBoard (Board (r1,r2,r3,r4,r5,r6,r7,r8)) symbol position =
         Board data
     newBoard
 
+// When a mill is identified, it's time to kill, this function applies other functions to ensure that an elimination should take place
 let rec eliminate (Board (r1,r2,r3,r4,r5,r6,r7,r8)) player ylist mlist =
     let game = Board (r1,r2,r3,r4,r5,r6,r7,r8)
 
@@ -613,6 +642,15 @@ let rec eliminate (Board (r1,r2,r3,r4,r5,r6,r7,r8)) player ylist mlist =
             Console.ForegroundColor<-ConsoleColor.Cyan
             eliminate game player ylist mlist 
 
+/// <summary>
+/// < Game Check is where relevant messages are broadcasted to the entire game, messages are MILL or ONGOING
+      /// gameCheck is only applied to placing as few a mill is not conditional
+      /// gameCheck2 is applied to moving and flying because mill is recognized if and only if the previous move did not result in breaking that mill which is supposely being formed
+/// </summary>
+/// <param name="game"></param>
+/// <param name="yMlist"></param>
+/// <param name="mMlist"></param>
+
 let gameCheck game yMlist mMlist =
 
     match mill_Y_Check game yMlist || mill_Y_Check2 game yMlist || mill_Y_Check3 game yMlist || mill_M_Check game mMlist || mill_M_Check2 game mMlist || mill_M_Check3 game mMlist with
@@ -624,7 +662,7 @@ let gameCheck2 game yMlist mMlist moveFrom moveTo (y_prevMove:string list) (m_pr
     | Y -> 
            match y_prevMove.[0] = moveTo && y_prevMove.[1] = moveFrom with
             | true -> Ongoing game
-            | _ ->  match mill_Y_Check game yMlist|| mill_Y_Check2 game yMlist || mill_Y_Check3 game mMlist  with
+            | _ ->  match mill_Y_Check game yMlist|| mill_Y_Check2 game yMlist || mill_Y_Check3 game yMlist  with
                     | true -> Mill game
                     | _ -> Ongoing game
 
@@ -637,6 +675,7 @@ let gameCheck2 game yMlist mMlist moveFrom moveTo (y_prevMove:string list) (m_pr
 
     | _ -> Ongoing game
 
+// Checks if a cell is empty
 let isBlank game position =
     match position, game with
     | "A1", Board ((Blank,_,_),_,_,_,_,_,_,_) -> true
@@ -665,12 +704,111 @@ let isBlank game position =
     | "G7", Board (_,_,_,_,_,_,_,(_,_,Blank)) -> true
     | _ -> false
 
+// create a new blank board
 let blankBoard =
     let blankRow = Blank, Blank, Blank
     Board (blankRow, blankRow, blankRow,blankRow,blankRow,blankRow,blankRow,blankRow)
 
-let Yclor = ConsoleColor.Blue
+/// <summary>
+/// <The following customized myprintfs functions are specially made for some color printing, to give Y and M player different colors 
+/// </summary>
+/// <param name="x"> Player {M,Y} </param>
 
+let myprintf x =
+    match x with
+    | 'Y' -> Console.ForegroundColor<-ConsoleColor.Green
+             printf " 'Y'"
+             Console.ForegroundColor<-ConsoleColor.Cyan
+             printf"______________"
+    | 'M' -> Console.ForegroundColor<-ConsoleColor.Red
+             printf " 'X'"
+             Console.ForegroundColor<-ConsoleColor.Cyan
+             printf"______________"
+    | _ -> printf" ' '______________"
+
+let myprintf2 x =
+    match x with
+    | 'Y' -> Console.ForegroundColor<-ConsoleColor.Green
+             printfn "'Y'"
+             Console.ForegroundColor<-ConsoleColor.Cyan
+             
+    | 'M' -> Console.ForegroundColor<-ConsoleColor.Red
+             printfn "'X'"
+             Console.ForegroundColor<-ConsoleColor.Cyan
+            
+    | _ -> printfn "' '"
+   
+let myprintf3 x =
+    match x with
+    | 'Y' -> Console.ForegroundColor<-ConsoleColor.Green
+             printf "    'Y'"
+             Console.ForegroundColor<-ConsoleColor.Cyan
+             printf "__________"
+    | 'M' -> Console.ForegroundColor<-ConsoleColor.Red
+             printf "    'M'"
+             Console.ForegroundColor<-ConsoleColor.Cyan
+             printf"__________"
+    | _ -> printf "    ' '__________"
+
+let myprintf4 x =
+    match x with
+    | 'Y' -> Console.ForegroundColor<-ConsoleColor.Green
+             printf "'Y'"
+             Console.ForegroundColor<-ConsoleColor.Cyan
+             printf "_________"
+    | 'M' -> Console.ForegroundColor<-ConsoleColor.Red
+             printf "'M'"
+             Console.ForegroundColor<-ConsoleColor.Cyan
+             printf"_________"
+    | _ -> printf "' '_________"
+
+let myprintf5 x =
+    match x with
+    | 'Y' -> Console.ForegroundColor<-ConsoleColor.Green
+             printf "'Y'"
+             Console.ForegroundColor<-ConsoleColor.Cyan
+    | 'M' -> Console.ForegroundColor<-ConsoleColor.Red
+             printf "'M'"
+             Console.ForegroundColor<-ConsoleColor.Cyan
+    | _ -> printf "' '"
+
+let myprintf6 x =
+    match x with
+    | 'Y' -> Console.ForegroundColor<-ConsoleColor.Green
+             printf "'Y'"
+             Console.ForegroundColor<-ConsoleColor.Cyan
+             printf "_____"
+    | 'M' -> Console.ForegroundColor<-ConsoleColor.Red
+             printf "'M'"
+             Console.ForegroundColor<-ConsoleColor.Cyan
+             printf"_____"
+    | _ -> printf "' '_____"
+
+let myprintf7 x =
+    match x with
+    | 'Y' -> Console.ForegroundColor<-ConsoleColor.Green
+             printf "'Y'"
+             Console.ForegroundColor<-ConsoleColor.Cyan
+             printf "_____"
+    | 'M' -> Console.ForegroundColor<-ConsoleColor.Red
+             printf "'M'"
+             Console.ForegroundColor<-ConsoleColor.Cyan
+             printf"_____"
+    | _ -> printf "' '_____"
+
+let myprintf8 x =
+    match x with
+    | 'Y' -> Console.ForegroundColor<-ConsoleColor.Green
+             printf "'Y'"
+             Console.ForegroundColor<-ConsoleColor.Cyan
+             printf "__"
+    | 'M' -> Console.ForegroundColor<-ConsoleColor.Red
+             printf "'M'"
+             Console.ForegroundColor<-ConsoleColor.Cyan
+             printf"__"
+    | _ -> printf "' '__"
+
+// Printing the whole board
 let printBoard (Board (r1, r2, r3,r4,r5,r6,r7,r8)) (cows:int list)= 
                    
       System.Console.Clear ()
@@ -688,36 +826,67 @@ let printBoard (Board (r1, r2, r3,r4,r5,r6,r7,r8)) (cows:int list)=
       let f2, f4, f6 = r7
       let g1, g4, g7 = r8
 
+     
       let top = printf "\n\n\n\t\t\t\t  1    2    3       4      5    6    7 \n\n\n"
-      let printBdA = printfn "\t\t\tA\t %A ______________%A______________%A" (tc a1) (tc a4) (tc a7)
+      let printBdA = printf "\t\t\tA\t" 
+                     myprintf (tc a1)
+                     myprintf (tc a4)
+                     myprintf2 (tc a7)
                      printfn "\t\t\t\t |  \               |              / |"
                      printfn "\t\t\t\t |   \              |             /  | "
                      printfn "\t\t\t\t |    \             |            /   |"
-      let printBdB = printfn "\t\t\tB\t |    %A__________%A_________%A   |" (tc b2) (tc b4) (tc b6)
+      let printBdB = printf "\t\t\tB\t |"    
+                     myprintf3 (tc b2)
+                     myprintf4 (tc b4)
+                     myprintf5 (tc b6)
+                     printfn "   |" 
                      printfn "\t\t\t\t |     |\           |          /|    | \t\t Y \t\t\t\t M"
                      printfn "\t\t\t\t |     | \          |         / |    |"
                      printfn "\t\t\t\t |     |  \         |        /  |    | \t\t Cows: %d \t\t Cows: %d" cows.[0] cows.[1]
-      let printBdC = printfn "\t\t\tC\t |     |   %A_____%A____%A   |    |" (tc c3) (tc c4) (tc c5)
+      let printBdC = printf "\t\t\tC\t |     |   "
+                     myprintf6 (tc c3)
+                     myprintf7 (tc c4)
+                     myprintf5 (tc c5)   
+                     printfn"  |    |"   
                      printfn "\t\t\t\t |     |    |              |    |    | \t\t kills: %d \t\t kills: %d " (12-cows.[1]) (12-cows.[0])
                      printfn "\t\t\t\t |     |    |              |    |    |"
                      printfn "\t\t\t\t |     |    |              |    |    |"
       let printBdD =
-                     printfn "\t\t\tD\t %A__%A__%A            %A__%A__%A" (tc d1) (tc d2) (tc d3) (tc d5) (tc d6) (tc d7)
+                     printf "\t\t\tD\t "
+                     myprintf8 (tc d1)
+                     myprintf8 (tc d2)
+                     myprintf5 (tc d3)
+                     printf "            "
+                     myprintf8 (tc d5)
+                     myprintf8 (tc d6)
+                     myprintf5 (tc d7)
+                     printfn ""
                      printfn "\t\t\t\t |     |    |              |    |    |"
                      
       let printBdE = printfn "\t\t\t\t |     |    |              |    |    |"
                      printfn "\t\t\t\t |     |    |              |    |    |"
-                     printfn "\t\t\tE\t |     |   %A_____%A____%A   |    |" (tc e3) (tc e4) (tc e5)
+                     printf "\t\t\tE\t |     |   "
+                     myprintf6 (tc e3)
+                     myprintf7 (tc e4)
+                     myprintf5 (tc e5)
+                     printfn"  |    |"   
              
       let printBdF = printfn "\t\t\t\t |     |   /        |        \  |    |"
                      printfn "\t\t\t\t |     |  /         |         \ |    |"
                      printfn "\t\t\t\t |     | /          |          \|    |"
-                     printfn "\t\t\tF\t |    %A__________%A_________%A   |" (tc f2) (tc f4) (tc f6)
-
+                     printf "\t\t\tF\t |"   
+                     myprintf3 (tc f2)
+                     myprintf4 (tc f4)
+                     myprintf5 (tc f6)  
+                     printfn"   |"
       let printBdG  = printfn "\t\t\t\t |    /             |            \   |"
                       printfn "\t\t\t\t |   /              |             \  | "
                       printfn "\t\t\t\t |  /               |              \ |"
-                      printfn "\t\t\tG\t  %A _____________%A_____________%A" (tc g1) (tc g4) (tc g7)    
+                      printf "\t\t\tG\t"
+                      myprintf (tc g1)
+                      myprintf (tc g4)
+                      myprintf2 (tc g7)  
+                      printfn ""
       printBdA
       printBdB
       printBdC
@@ -726,10 +895,12 @@ let printBoard (Board (r1, r2, r3,r4,r5,r6,r7,r8)) (cows:int list)=
       printBdF
       printBdG
 
+// place player
 let makeMove symbol (Board (r1,r2,r3,r4,r5,r6,r7,r8)) position yMlist mMlist =
     let newBoard = updateBoard (Board (r1,r2,r3,r4,r5,r6,r7,r8)) symbol position
     gameCheck newBoard yMlist mMlist
 
+// Check player's available cell to moveTo
 let checkNeighbors moveFrom moveTo =
  
     let aOne = ["A4";"B2";"D1"]
@@ -784,7 +955,8 @@ let checkNeighbors moveFrom moveTo =
     | "G4" -> List.exists tst gFour
     | "G7" -> List.exists tst gSeven
     | _ -> false
-    
+ 
+// Move the cow 
 let moveCow (Board (r1, r2, r3,r4,r5,r6,r7,r8)) play moveFrom moveTo yMlist mMlist y_prevMove m_prevMove=
     
     let currentBoard  = (Board (r1, r2, r3,r4,r5,r6,r7,r8))
@@ -799,7 +971,25 @@ let flyCow (Board (r1, r2, r3,r4,r5,r6,r7,r8)) play moveFrom moveTo yMlist mMlis
     let RemoveCow  =  updateBoard currentBoard Blank moveFrom
     let newB = updateBoard RemoveCow play moveTo
     gameCheck2 newB yMlist mMlist moveFrom moveTo y_prevMove m_prevMove play
-                     
+
+/// <summary>
+/// < Reseting values
+/// </summary>
+/// <param name="yMlist"></param>
+
+let mill_reset (yMlist:'int list) =
+   let x = List.length yMlist
+   List.init x (fun _ -> 0)
+
+let cowsLife (cows:'int list) =
+   let x = List.length cows
+   List.init x (fun _ -> 12)
+
+let prev_moves (moves:'int list) = 
+    let x = List.length moves
+    List.init x (fun _ -> "")
+
+// Recursive function to place to the board 
 let rec run player game yMlist mMlist (cows:int list) v =
     // need to find the blank cells that can be used...
     printBoard game cows
@@ -816,7 +1006,8 @@ let rec run player game yMlist mMlist (cows:int list) v =
     match isBlank game n && input_vallidation2 n with
      | true -> makeMove player game n yMlist mMlist
      | _ -> run player game yMlist mMlist cows 1
-    
+ 
+// Recursive function to move cow in the board 
 let rec run1 player game yMlist mMlist (cows:int list) y_prevMove m_prevMove v =
     // need to find the blank cells that can be used...
     printBoard game cows
@@ -842,7 +1033,8 @@ let rec run1 player game yMlist mMlist (cows:int list) y_prevMove m_prevMove v =
              | true -> (moveCow game player moveFrom moveTo yMlist mMlist y_prevMove m_prevMove,moveFrom,moveTo)
              | _ -> run1 player game yMlist mMlist cows y_prevMove m_prevMove 1
     | _ -> run1 player game yMlist mMlist cows y_prevMove m_prevMove 1     
-      
+  
+// Recursive  function to fly the cow 
 let rec run2 player game yMlist mMlist (cows:int list) y_prevMove m_prevMove v =
     // need to find the blank cells that can be used...
     printBoard game cows
@@ -869,8 +1061,10 @@ let rec run2 player game yMlist mMlist (cows:int list) y_prevMove m_prevMove v =
              | _ -> run2 player game yMlist mMlist cows y_prevMove m_prevMove 1
     | _ -> run2 player game yMlist mMlist cows y_prevMove m_prevMove 1
 
+// The main recursive function to run the whole game
 let rec runGame currentPlayer game i yMlist m_Mill_List (cows:int list) y_prevMove m_prevMove =
-    let playAgain () =
+    let playAgain yMlist m_Mill_List cows y_prevMove m_prevMove=
+        Console.ForegroundColor<-ConsoleColor.Cyan
         printfn "Play again? [y/N] "
         match System.Console.ReadLine() with
         | "Y" | "y" -> runGame Y blankBoard i yMlist m_Mill_List cows y_prevMove m_prevMove
@@ -878,7 +1072,13 @@ let rec runGame currentPlayer game i yMlist m_Mill_List (cows:int list) y_prevMo
     match i with
     | 0 ->  match currentPlayer,cows.[0] with
             | Y,2 -> Console.ForegroundColor<-ConsoleColor.DarkYellow
-                     printf "\n\nGame Over!!!! %A is the winner" M
+                     printf "\n\nGame Over!!!! %A is the winner\n\n" M
+                     let newYlist = mill_reset yMlist
+                     let newMlist = mill_reset m_Mill_List
+                     let newcows = cowsLife cows
+                     let newPrevMovesY = prev_moves y_prevMove
+                     let newPrevMovesM = prev_moves m_prevMove
+                     playAgain newYlist newMlist newcows newPrevMovesY newPrevMovesM
             | Y,3 ->  match run2 currentPlayer game yMlist m_Mill_List cows y_prevMove m_prevMove 0 with
                       | Mill newBoard,posF,posT-> printBoard newBoard cows
                                                   let newcows = kill cows currentPlayer
@@ -902,32 +1102,40 @@ let rec runGame currentPlayer game i yMlist m_Mill_List (cows:int list) y_prevMo
                                                      let new_M_Mlist = Broken_yMill posF m_Mill_List
                                                      let new_y_prevMove = [posF;posT]
                                                      runGame (swapPlayer currentPlayer) newBoard 0 newYMlist new_M_Mlist cows new_y_prevMove m_prevMove
-                   
+             | _ -> ()      
+            
+            match currentPlayer,cows.[1] with
             | M,2 -> Console.ForegroundColor<-ConsoleColor.DarkYellow
                      printf "\n\nGame Over!!!! %A is the winner" Y
+                     let newYlist = mill_reset yMlist
+                     let newMlist = mill_reset m_Mill_List
+                     let newcows = cowsLife cows
+                     let newPrevMovesY = prev_moves y_prevMove
+                     let newPrevMovesM = prev_moves m_prevMove
+                     playAgain newYlist newMlist newcows newPrevMovesY newPrevMovesM
             | M,3 -> match run2 currentPlayer game yMlist m_Mill_List cows y_prevMove m_prevMove 0 with
-                     | Mill newBoard,posF,posT-> printBoard newBoard cows
-                                                 let newB = eliminate newBoard currentPlayer yMlist m_Mill_List
+                      | Mill newBoard,posF,posT-> printBoard newBoard cows
+                                                  let newB = eliminate newBoard currentPlayer yMlist m_Mill_List
+                                                  let newcows = kill cows currentPlayer
+                                                  let new_m_prevMove = posF::posT::[]
+                                                  runGame (swapPlayer currentPlayer) newB 0 yMlist m_Mill_List newcows y_prevMove new_m_prevMove
+                      | Ongoing newBoard,posF,posT -> let newYMlist = Broken_yMill posF yMlist 
+                                                      let new_M_Mlist = Broken_yMill posF m_Mill_List                             
+                                                      let new_m_prevMove = posF::posT::[]
+                                                      runGame (swapPlayer currentPlayer) newBoard 0 newYMlist new_M_Mlist cows y_prevMove new_m_prevMove
+            | M,_ ->
+                  match run1 currentPlayer game yMlist m_Mill_List cows y_prevMove m_prevMove 0 with
+                   | Mill newBoard,posF,posT->   printBoard newBoard cows
+                                                 let newYMlist = mill_Y_Update newBoard yMlist
+                                                 let new_M_Mlist = mill_M_Update newBoard m_Mill_List                         
+                                                 let newB = eliminate newBoard currentPlayer newYMlist new_M_Mlist
                                                  let newcows = kill cows currentPlayer
                                                  let new_m_prevMove = posF::posT::[]
-                                                 runGame (swapPlayer currentPlayer) newB 0 yMlist m_Mill_List newcows y_prevMove new_m_prevMove
-                     | Ongoing newBoard,posF,posT -> let newYMlist = Broken_yMill posF yMlist 
-                                                     let new_M_Mlist = Broken_yMill posF m_Mill_List                             
-                                                     let new_m_prevMove = posF::posT::[]
-                                                     runGame (swapPlayer currentPlayer) newBoard 0 newYMlist new_M_Mlist cows y_prevMove new_m_prevMove
-            | M,_ ->
-                 match run1 currentPlayer game yMlist m_Mill_List cows y_prevMove m_prevMove 0 with
-                  | Mill newBoard,posF,posT->   printBoard newBoard cows
-                                                let newYMlist = mill_Y_Update newBoard yMlist
-                                                let new_M_Mlist = mill_M_Update newBoard m_Mill_List                         
-                                                let newB = eliminate newBoard currentPlayer newYMlist new_M_Mlist
-                                                let newcows = kill cows currentPlayer
-                                                let new_m_prevMove = posF::posT::[]
-                                                runGame (swapPlayer currentPlayer) newB 0 newYMlist new_M_Mlist newcows y_prevMove new_m_prevMove
-                  | Ongoing newBoard,posF,posT -> let newYMlist = Broken_yMill posF yMlist 
-                                                  let new_M_Mlist = Broken_yMill posF m_Mill_List
-                                                  let new_m_prevMove = posF::posT::[]
-                                                  runGame (swapPlayer currentPlayer) newBoard 0 newYMlist new_M_Mlist cows y_prevMove new_m_prevMove
+                                                 runGame (swapPlayer currentPlayer) newB 0 newYMlist new_M_Mlist newcows y_prevMove new_m_prevMove
+                   | Ongoing newBoard,posF,posT -> let newYMlist = Broken_yMill posF yMlist 
+                                                   let new_M_Mlist = Broken_yMill posF m_Mill_List
+                                                   let new_m_prevMove = posF::posT::[]
+                                                   runGame (swapPlayer currentPlayer) newBoard 0 newYMlist new_M_Mlist cows y_prevMove new_m_prevMove
             | _ -> ()
     | _-> match run currentPlayer game yMlist m_Mill_List cows 0 with
             | Mill newBoard-> printBoard newBoard cows
@@ -948,11 +1156,11 @@ let main argv =
     let cows = [12;12]
     let y_prevMove = ["";""]
     let m_prevMove = ["";""]
-    runGame Y blankBoard 8 y_millList m_millList cows y_prevMove m_prevMove
+    runGame Y blankBoard 24 y_millList m_millList cows y_prevMove m_prevMove
 
     0 
 (*
                        ----------------------------------------------- PROGRESS ------------------------------------------------------
-                       1. NONE
+                       1. DONE
                            
 *)
